@@ -31,7 +31,7 @@ const projects = (await getProjects()).map(lite);
     </script>
   </head>
   <body>
-    <TmuxBar client:load isHome={isHome} active={isHome ? 'topo' : active} projects={projects} status={[site.status, site.location, site.rev]} email={site.email} />
+    <TmuxBar client:load isHome={isHome} active={isHome ? 'topo' : active} projects={projects} status={[site.location]} email={site.email} />
     <slot />
     <Footer isHome={isHome} />
   </body>

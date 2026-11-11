@@ -1,5 +1,4 @@
 
-/* gabriel.s — componentes. Todos os valores vêm de tokens.css. */
 body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-weight: 300; -webkit-font-smoothing: antialiased; }
 .gs-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; padding: var(--space-5); }
 .gs-stack { display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-5); }

@@ -11,7 +11,6 @@ export type Etapa = {
   projeto?: { label: string; href: string };
 };
 
-/** Linha do tempo da seção 0x02. A etapa com `open` começa aberta. */
 export const trajetoria: Etapa[] = [
   {
     id: 'puc',

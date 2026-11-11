@@ -4,7 +4,6 @@
 @import "./tokens.css";
 @import "./components.css";
 
-/* Tailwind lê as cores do gabriel.s (bg-surface, text-muted, border-line…). */
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);

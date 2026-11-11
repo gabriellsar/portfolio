@@ -1,6 +1,6 @@
-# gabriel.s — portfólio
+# gabriel.r — portfólio
 
-Portfólio pessoal construído com o design system **gabriel.s**: dark-first, estética de terminal, um acento frio por tela.
+Portfólio pessoal construído com o design system **gabriel.r**: dark-first, estética de terminal, um acento frio por tela.
 
 - **Astro 5** gera o site estático; **React** só onde há interação (barra tmux, shell, linha do tempo, boot).
 - **Tailwind 4** está disponível e lê os tokens (`bg-surface`, `text-muted`, `border-line`…), mas a maior parte do visual vem das classes `gs-*` do design system.

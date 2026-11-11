@@ -26,7 +26,7 @@ const canais = [
     <div class="hero-grid" aria-hidden="true"></div>
     <div class="wrap hero-inner">
       <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> whoami</p>
-      <h1 class="hero-name">gabriel.s<span class="hero-cursor blink" aria-hidden="true"></span></h1>
+      <h1 class="hero-name">gabriel.r<span class="hero-cursor blink" aria-hidden="true"></span></h1>
 
       <div style="display: flex; flex-direction: column; gap: 10px; max-width: 780px">
         <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> cat sobre.txt</p>
@@ -123,7 +123,7 @@ const canais = [
           <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
             <p style="margin: 0; color: var(--muted)">{stack.length} diretórios · <span style="color: var(--text)">{total}+</span> ferramentas</p>
             <div style="display: flex; align-items: center; gap: 14px">
-              <Palette label="Paleta do design system gabriel.s" />
+              <Palette label="Paleta do design system gabriel.r" />
               <span style="font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">{sistema}</span>
             </div>
           </div>
@@ -135,7 +135,6 @@ const canais = [
     <section id="trajetoria" style="display: flex; flex-direction: column; gap: 40px">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
         <SectionHeader address="0x02" title="Trajetória" />
-        <p style="margin: 0; max-width: 420px; font-size: 16px; line-height: 1.6">Consultoria, startup e laboratório de pesquisa. Abra cada etapa para ver o que fiz e o que ficou.</p>
       </div>
       <Timeline client:visible items={trajetoria} initial={trajetoriaAberta} />
     </section>

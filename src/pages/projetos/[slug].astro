@@ -17,7 +17,7 @@ const p = entry.data;
 const { Content } = await render(entry);
 const linkOf = (e?: typeof entry) => (e ? (e.data.caseStudy ? `/projetos/${e.id}` : `/projetos#${e.data.code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`) : '/projetos');
 ---
-<Layout title={`${p.title} — estudo de caso · gabriel.s`} description={p.lead ?? p.desc} active="projetos">
+<Layout title={`${p.title} — estudo de caso · gabriel.r`} description={p.lead ?? p.desc} active="projetos">
   <main class="wrap" style="display: flex; flex-direction: column; gap: 72px">
     <section style="display: flex; flex-direction: column; gap: 32px; padding-top: 48px">
       <a href="/projetos" class="mono-label link-plain" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px">← Todos os projetos</a>

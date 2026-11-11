@@ -15,7 +15,7 @@ const year = now.getFullYear();
 <footer class="site-footer" style="margin-top: 120px; border-top: 1px solid var(--line)">
   <div class="wrap" style="padding-top: 64px; padding-bottom: 48px; display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; align-items: flex-start">
     <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 16px">
-      <p style="margin: 0; font-family: var(--font-mono); font-size: 28px; font-weight: 500; color: var(--text-strong)">gabriel.s<span aria-hidden="true" style="display: inline-block; width: 15px; height: 26px; margin-left: 4px; vertical-align: -3px; background: var(--accent)"></span></p>
+      <p style="margin: 0; font-family: var(--font-mono); font-size: 28px; font-weight: 500; color: var(--text-strong)">gabriel.r<span aria-hidden="true" style="display: inline-block; width: 15px; height: 26px; margin-left: 4px; vertical-align: -3px; background: var(--accent)"></span></p>
       <p style="margin: 0; max-width: 340px; font-size: 16px; line-height: 1.6">Sistemas, gráficos e dados, construídos do zero no Rio de Janeiro.</p>
       <div style="display: flex; flex-wrap: wrap; gap: 8px">
         <Tag tone="accent">Aberto a estágio</Tag>
@@ -37,18 +37,12 @@ const year = now.getFullYear();
       <a class="foot-link" href={isHome ? linkedinHref : linkedinHref.startsWith('#') ? '/#contato' : linkedinHref} rel="me">LinkedIn ↗</a>
     </div>
 
-    <div class="foot-col" style="flex: 0 1 220px">
-      <p class="mono-label">Este site</p>
-      <p class="foot-link" style="margin: 0">Design system gabriel.s</p>
-      <p class="foot-link" style="margin: 0">Geist + Geist Mono</p>
-      <p class="foot-link" style="margin: 0">Astro · React</p>
-    </div>
   </div>
 
   <Heightmap cols={cols} rows={rows} seed={seed} caption={false} marker label="Faixa de terreno gerada por ruído" />
 
   <div class="wrap foot-bottom">
-    <span>© {year} GABRIEL · GS/PORTFÓLIO · {site.rev}</span>
+    <span>© {year} GABRIEL · GS/PORTFÓLIO</span>
     <span>FIG.00 — HEIGHTMAP · {cols}×{rows} · SEED 0x{seed.toString(16).toUpperCase()}</span>
     <a href="#topo">↑ TOPO</a>
   </div>

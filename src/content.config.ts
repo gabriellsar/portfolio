@@ -1,11 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-/**
- * Cada projeto é um arquivo em src/content/projects/.
- * - `destaque: 1 | 2 | 3` coloca o projeto nos cards do topo da home (na ordem do número).
- * - `caseStudy: true` gera a página /projetos/<arquivo> com o corpo do .mdx.
- */
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
   schema: z.object({

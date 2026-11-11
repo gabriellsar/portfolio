@@ -1,7 +1,3 @@
-/**
- * Componentes do design system gabriel.s portados para TSX.
- * Os estilos estão em src/styles/components.css (classes gs-*), que lê tokens.css.
- */
 import { Fragment, useMemo, type ReactNode } from 'react';
 
 const cx = (...c: Array<string | false | null | undefined>) => c.filter(Boolean).join(' ');

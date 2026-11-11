@@ -1,22 +1,16 @@
-/**
- * Dados gerais do site. Preencha os campos entre colchetes antes de publicar.
- */
 export const site = {
-  name: 'gabriel.s',
+  name: 'gabriel.r',
   author: 'Gabriel',
-  title: 'gabriel.s — portfólio',
+  title: 'Gabriel Rosas',
   description:
     'Engenharia de Computação na PUC-Rio. Pesquisa em ML aplicado, gráficos procedurais e software que vira produto.',
-  location: 'RIO · UTC−3',
-  status: 'ABERTO A ESTÁGIO',
-  rev: 'REV 0.1',
-  email: '[EMAIL]',
+  location: 'RIO DE JANEIRO, BRASIL',
+  email: 'gabrielsrosas@gmail.com',
   github: 'https://github.com/gabriellsar',
   githubLabel: 'github.com/gabriellsar',
-  linkedin: '[LINKEDIN]',
+  linkedin: 'https://www.linkedin.com/in/gabriellsar/',
   cv: '/cv.pdf',
-  // Tela de boot na primeira visita da sessão. Desligada por padrão.
-  boot: false,
+  boot: true,
 };
 
 export const mailto = site.email.startsWith('[') ? '#contato' : `mailto:${site.email}`;

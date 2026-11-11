@@ -1,7 +1,3 @@
-/**
- * Barra fixa no topo, no estilo das abas do tmux.
- * Na home faz scrollspy das seções; nas outras páginas as abas levam de volta para a home.
- */
 import { useCallback, useEffect, useState } from 'react';
 import Shell from './Shell';
 import type { ProjectLite } from '@/lib/projects';
@@ -72,7 +68,7 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
   return (
     <nav className="tmux" aria-label="Principal">
       <div className="tmux-left">
-        <a href={isHome ? '#topo' : '/'} className="tmux-brand">{sh ? 'CMD' : 'gabriel.s'}</a>
+        <a href={isHome ? '#topo' : '/'} className="tmux-brand">{sh ? 'CMD' : 'gabriel.r'}</a>
         {TABS.map((t) => {
           const on = t.id === active;
           return (
@@ -81,9 +77,6 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
             </a>
           );
         })}
-        <button type="button" className="tmux-tab" onClick={() => setSh((v) => !v)} aria-expanded={sh} aria-controls="gs-shell" title="terminal escondido (:)">
-          {sh ? ':cmd*' : ':cmd'}
-        </button>
       </div>
       <div className="tmux-end">
         <div className="tmux-status">

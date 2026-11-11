@@ -1,17 +1,13 @@
-/**
- * Tela de boot falsa. Liga em src/data/site.ts (`boot: true`).
- * Aparece uma vez por sessão do navegador e respeita prefers-reduced-motion.
- */
 import { useEffect, useRef, useState } from 'react';
 import { Progress } from '@/components/ui';
 
 const END = 70;
 const MSGS: [string, string, string][] = [
-  ['GS-BOOT v0.3 · gabriel.s', '', 'muted'],
+  ['GS-BOOT v0.3 · gabriel.r', '', 'muted'],
   ['verificando memória ................', 'ok', 'accent'],
   ['montando /portfolio ................', 'ok', 'accent'],
   ['carregando tokens ..................', 'ok', 'accent'],
-  ['iniciando design system gabriel.s ..', 'ok', 'accent'],
+  ['iniciando design system gabriel.r ..', 'ok', 'accent'],
   ['PUC-Rio · Eng. de Computação .......', '2027.2', 'text'],
 ];
 
@@ -37,7 +33,7 @@ export default function Boot({ location }: { location: string }) {
   if (!show) return null;
   const skip = () => { clearInterval(timer.current); setShow(false); };
   const cmd = 'whoami'.slice(0, Math.max(0, Math.min(6, t - 28)));
-  const name = 'gabriel.s'.slice(0, Math.max(0, Math.min(9, t - 38)));
+  const name = 'gabriel.r'.slice(0, Math.max(0, Math.min(9, t - 38)));
   const blink = Math.floor(t / 5) % 2 === 0 ? 1 : 0;
   const pct = Math.min(100, Math.round((t / END) * 100));
 

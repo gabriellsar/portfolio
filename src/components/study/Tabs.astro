@@ -1,8 +1,4 @@
 ---
-/**
- * Abas do estudo de caso. Os painéis são <TabPanel id="…"> dentro do slot.
- * Sem JavaScript, todos os painéis aparecem em sequência.
- */
 interface Item { id: string; label: string; count?: number }
 interface Props { items: Item[]; value?: string }
 const { items, value = items[0]?.id } = Astro.props;

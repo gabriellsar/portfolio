@@ -1,4 +1,3 @@
-/** Seção FERRAMENTAS — o `ls -l ~/stack`. */
 export const stack: { dir: string; items: string[] }[] = [
   { dir: 'dados', items: ['python', 'r', 'sql'] },
   { dir: 'graficos', items: ['c++', 'opengl', 'glsl', 'godot'] },
