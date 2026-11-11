@@ -1,0 +1,159 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Boot from '@/components/home/Boot';
+import Timeline from '@/components/home/Timeline';
+import { Card, DataBlock, SectionHeader, Tag, Palette } from '@/components/ui';
+import { site, mailto, linkedinHref } from '@/data/site';
+import { stack, sistema } from '@/data/stack';
+import { trajetoria, trajetoriaAberta } from '@/data/trajetoria';
+import { getProjects, lite, splitFeatured } from '@/lib/projects';
+
+const all = await getProjects();
+const { featured, rest } = splitFeatured(all);
+const n2 = (n: number) => String(n).padStart(2, '0');
+const total = stack.reduce((s, d) => s + d.items.filter((i) => !i.startsWith('[')).length, 0);
+const canais = [
+  { k: 'GitHub', v: site.githubLabel },
+  { k: 'E-mail', v: site.email },
+  { k: 'LinkedIn', v: site.linkedin },
+  { k: 'Local', v: 'Rio de Janeiro · UTC−3' },
+];
+---
+<Layout isHome>
+  {site.boot && <Boot client:load location={site.location} />}
+
+  <div id="topo" class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> whoami</p>
+      <h1 class="hero-name">gabriel.s<span class="hero-cursor blink" aria-hidden="true"></span></h1>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 780px">
+        <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> cat sobre.txt</p>
+        <p style="margin: 0; font-size: clamp(20px, 2.4vw, 26px); line-height: 1.45; font-weight: 300">{site.description}</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 12px">
+        <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> contato --abrir</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px">
+          <a href={mailto} class="gs-btn gs-btn-primary link-plain">[ E-mail ]</a>
+          <a href={site.github} class="gs-btn link-plain" rel="me">[ GitHub ↗ ]</a>
+          <a href={linkedinHref} class="gs-btn link-plain" rel="me">[ LinkedIn ↗ ]</a>
+          <a href="#projetos" class="gs-btn gs-btn-ghost link-plain">ls ./projetos →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap" style="padding-top: 88px; display: flex; flex-direction: column; gap: 88px">
+
+    <section id="projetos" style="display: flex; flex-direction: column; gap: 24px">
+      <SectionHeader address="0x01" title="Projetos em destaque" aside={`TOP ${n2(featured.length)} DE ${n2(all.length)}`} />
+      <div class="pf-cards">
+        {featured.map(({ data: p, id }) => (
+          <Card id={p.code} title={p.title}>
+            <p>{p.desc}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              {p.topics.map((t) => <Tag dot={false}>{t}</Tag>)}
+            </div>
+            <dl class="gs-card-meta"><dt>Base</dt><dd>{p.base}</dd></dl>
+            <div class="pf-cta">
+              {p.caseStudy
+                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão ampliada →</a>
+                : <button type="button" class="gs-btn" disabled>Visão ampliada · em breve</button>}
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div style="display: flex; flex-direction: column; margin-top: 24px; border-top: 1px solid var(--line-strong)">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 0 16px">
+          <p class="mono-label">Outros projetos</p>
+          <a href="/projetos" class="gs-btn gs-btn-sm link-plain">Ver todos os {n2(all.length)} →</a>
+        </div>
+        {rest.map((e) => {
+          const p = lite(e);
+          return (
+            <a href={p.href} class="pf-row">
+              <span style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--muted)">{p.code}</span>
+              <span style="font-size: 16px; font-weight: 400; color: var(--text-strong)">{p.title}</span>
+              <span class="pf-hide" style="font-size: 14px; font-weight: 400; color: var(--muted)">{p.topics.join(' · ')}</span>
+              <span class="pf-hide" style="font-family: var(--font-mono); font-size: 12px; color: var(--text)">{p.base}</span>
+              <span class="pf-arrow" aria-hidden="true">→</span>
+            </a>
+          );
+        })}
+        <div style="border-top: 1px solid var(--line)"></div>
+      </div>
+    </section>
+
+    <section id="ferramentas" aria-label="Ferramentas principais" style="display: flex; flex-direction: column; gap: 20px">
+      <p class="mono-label">Ferramentas</p>
+      <div class="term">
+        <div class="term-bar">
+          <span><span style="color: var(--text-strong)">1:zsh</span>  <span style="color: var(--line-strong)">│</span>  ~/stack</span>
+          <span>pane 1/1 · 120×18</span>
+        </div>
+        <div class="term-body">
+          <p class="seg">
+            <span style="background: var(--accent); color: var(--on-accent); font-weight: 500">gabriel@arch</span>
+            <span style="background: var(--line-strong); color: var(--text-strong)">~/stack</span>
+            <span style="background: var(--surface); color: var(--muted)">git:main</span>
+            <span style="padding-left: 12px; color: var(--text-strong)">ls -l --group</span>
+          </p>
+          <div role="table" aria-label="Ferramentas por área" style="display: flex; flex-direction: column">
+            <p style="margin: 0 0 6px; color: var(--muted)">total {stack.length}</p>
+            {stack.map((d) => {
+              const known = d.items.filter((i) => !i.startsWith('['));
+              const count = d.items.some((i) => i.startsWith('[')) ? '[n]' : String(known.length);
+              return (
+                <div role="row" class="ls-row">
+                  <span role="cell" class="ls-perm" style="color: var(--line-strong)">drwxr-xr-x</span>
+                  <span role="cell" style="color: var(--accent); font-weight: 500">{d.dir}/</span>
+                  <span role="cell" style="color: var(--text-strong)">
+                    {d.items.map((it, i) => (
+                      <>{i > 0 && <span style="color: var(--line-strong)">{d.dir === 'cloud' && i === 1 ? ' → ' : ' · '}</span>}{it}</>
+                    ))}
+                  </span>
+                  <span role="cell" style="text-align: right; color: var(--muted)">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+            <p style="margin: 0; color: var(--muted)">{stack.length} diretórios · <span style="color: var(--text)">{total}+</span> ferramentas</p>
+            <div style="display: flex; align-items: center; gap: 14px">
+              <Palette label="Paleta do design system gabriel.s" />
+              <span style="font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">{sistema}</span>
+            </div>
+          </div>
+          <p style="margin: 0; display: flex; align-items: center"><span style="color: var(--accent)">gabriel@arch</span><span style="color: var(--muted)">:~/stack$</span><span aria-hidden="true" style="display: inline-block; width: 8px; height: 16px; margin-left: 8px; background: var(--accent)"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="trajetoria" style="display: flex; flex-direction: column; gap: 40px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+        <SectionHeader address="0x02" title="Trajetória" />
+        <p style="margin: 0; max-width: 420px; font-size: 16px; line-height: 1.6">Consultoria, startup e laboratório de pesquisa. Abra cada etapa para ver o que fiz e o que ficou.</p>
+      </div>
+      <Timeline client:visible items={trajetoria} initial={trajetoriaAberta} />
+    </section>
+
+    <section id="contato" style="display: flex; flex-direction: column; gap: 24px">
+      <SectionHeader address="0x03" title="Contato" />
+      <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start">
+        <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 20px">
+          <p style="margin: 0; font-size: clamp(32px, 4vw, 44px); line-height: 1.1; font-weight: 200; letter-spacing: -0.02em; color: var(--text-strong)">Aberto a estágio em dados, IA e engenharia.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <a href={mailto} class="gs-btn gs-btn-primary link-plain">Mandar e-mail</a>
+            <a href={site.cv} class="gs-btn link-plain" download>Baixar CV</a>
+          </div>
+        </div>
+        <div style="flex: 0 1 420px; min-width: min(300px, 100%)">
+          <DataBlock title="CANAIS" rows={canais} />
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,54 @@
+---
+/**
+ * Abas do estudo de caso. Os painéis são <TabPanel id="…"> dentro do slot.
+ * Sem JavaScript, todos os painéis aparecem em sequência.
+ */
+interface Item { id: string; label: string; count?: number }
+interface Props { items: Item[]; value?: string }
+const { items, value = items[0]?.id } = Astro.props;
+---
+<div class="gs-tabs-root" data-tabs data-value={value}>
+  <div class="gs-tabs" role="tablist">
+    {items.map((it) => (
+      <button
+        type="button"
+        role="tab"
+        class="gs-tab"
+        id={`tab-${it.id}`}
+        aria-controls={`panel-${it.id}`}
+        aria-selected={it.id === value ? 'true' : 'false'}
+        tabindex={it.id === value ? 0 : -1}
+        data-tab={it.id}
+      >
+        {it.label}{it.count != null && <span class="gs-tab-count">{it.count}</span>}
+      </button>
+    ))}
+  </div>
+  <slot />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const select = (id: string, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t.dataset.tab === id;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      });
+      panels.forEach((p) => { p.hidden = p.dataset.panel !== id; });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(t.dataset.tab!));
+      t.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        const n = (i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+        select(tabs[n].dataset.tab!, true);
+      });
+    });
+    select(root.dataset.value || tabs[0]?.dataset.tab || '');
+  });
+</script>

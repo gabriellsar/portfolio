@@ -1,0 +1,7 @@
+---
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<div class="gs-tabpanel tab-panel" role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} data-panel={id}>
+  <slot />
+</div>

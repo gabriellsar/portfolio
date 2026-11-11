@@ -1,0 +1,9 @@
+---
+import { SectionHeader } from '@/components/ui';
+interface Props { address?: string; title: string; aside?: string; id?: string }
+const { address, title, aside, id } = Astro.props;
+---
+<section class="study-section" id={id}>
+  <SectionHeader address={address} title={title} aside={aside} />
+  <slot />
+</section>

@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Card, SectionHeader, Tag } from '@/components/ui';
+import { getProjects, anchorOf } from '@/lib/projects';
+
+const all = await getProjects();
+---
+<Layout title="Projetos — gabriel.s" description="Todos os projetos de Gabriel: pesquisa, gráficos, sistemas e produto." active="projetos">
+  <main class="wrap" style="padding-top: 48px; display: flex; flex-direction: column; gap: 32px">
+    <a href="/#projetos" class="mono-label link-plain" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px">← Voltar para a home</a>
+    <SectionHeader as="h1" address="0x01" title="Todos os projetos" aside={`TOTAL ${String(all.length).padStart(2, '0')}`} />
+    <div class="pf-cards">
+      {all.map(({ data: p, id }) => (
+        <div id={anchorOf(p.code)} style="scroll-margin-top: 56px">
+          <Card id={p.code} title={p.title}>
+            {p.destaque && <Tag slot="aside" tone="accent">destaque</Tag>}
+            <p>{p.desc}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              {p.topics.map((t) => <Tag dot={false}>{t}</Tag>)}
+            </div>
+            <dl class="gs-card-meta"><dt>Base</dt><dd>{p.base}</dd></dl>
+            <div class="pf-cta" style="display: flex; flex-wrap: wrap; gap: 8px">
+              {p.caseStudy
+                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão ampliada →</a>
+                : <button type="button" class="gs-btn" disabled>Visão ampliada · em breve</button>}
+              {p.repo && <a href={p.repo} class="gs-btn gs-btn-ghost link-plain">Código ↗</a>}
+            </div>
+          </Card>
+        </div>
+      ))}
+    </div>
+  </main>
+</Layout>

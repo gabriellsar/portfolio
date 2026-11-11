@@ -1,0 +1,71 @@
+---
+code: P/02
+title: WindAnalyzer
+desc: App para modelar dados de vento sem supor distribuição, cruzando MERRA-2 com estações do INMET.
+topics: [estatística não paramétrica, dados climáticos, Monte Carlo]
+base: R · Shiny
+order: 2
+destaque: 2
+caseStudy: true
+eyebrow: P/02 · PESQUISA · FROG LAB
+lead: "Modelagem não paramétrica de dados de vento num app Shiny: reanálise MERRA-2 corrigida com estações do INMET, agrupada, estimada e simulada."
+tags:
+  - { label: Artigo submetido, tone: accent }
+  - { label: R · Shiny }
+  - { label: Depto. de Eng. Industrial }
+ficha:
+  - { k: Lab, v: FROG · PUC-Rio }
+  - { k: Dados, v: MERRA-2 + INMET }
+  - { k: Métodos, v: K-means · KDE · Monte Carlo }
+  - { k: Base, v: R · Shiny }
+  - { k: Saída, v: app + artigo }
+  - { k: Período, v: "[PERÍODO]" }
+figura:
+  alt: Interface do WindAnalyzer
+  legenda: FIG.02 — INTERFACE DO WINDANALYZER
+  data: "[DATA DA CAPTURA]"
+---
+
+import Section from '@/components/study/Section.astro';
+import Tabs from '@/components/study/Tabs.astro';
+import TabPanel from '@/components/study/TabPanel.astro';
+import Learned from '@/components/study/Learned.astro';
+import { Card, Stat } from '@/components/ui';
+
+<Section address="0x01" title="O estudo">
+  <Tabs items={[{ id: 'problema', label: 'O problema' }, { id: 'metodos', label: 'Os métodos', count: 4 }, { id: 'resultado', label: 'O resultado' }]}>
+    <TabPanel id="problema">
+      <div class="split">
+        <p class="statement">Vento não obedece a uma distribuição bem-comportada. Forçar uma forma pronta esconde justamente os padrões que importam.</p>
+        <div class="split-side">
+          <p>A reanálise MERRA-2 cobre tudo, mas tem viés; as estações do INMET medem de verdade, mas só onde existem. O trabalho junta as duas fontes e modela o resultado sem supor distribuição.</p>
+          <p class="muted">[Contexto: quem usa o resultado e para quê.]</p>
+        </div>
+      </div>
+    </TabPanel>
+    <TabPanel id="metodos">
+      <div class="auto-grid">
+        <Card id="M/01" title="Correção por razão" flat><p>Ajusta o viés da reanálise usando a razão com o que as estações mediram.</p></Card>
+        <Card id="M/02" title="K-means" flat><p>Separa regimes de vento parecidos antes de modelar cada um.</p></Card>
+        <Card id="M/03" title="KDE" flat><p>Estima a distribuição direto dos dados, sem impor uma forma.</p></Card>
+        <Card id="M/04" title="Monte Carlo" flat><p>Simula cenários a partir das distribuições estimadas.</p></Card>
+      </div>
+    </TabPanel>
+    <TabPanel id="resultado">
+      <div class="auto-grid">
+        <Stat label="Viés após correção" value="[—%]" note="vs. reanálise bruta" />
+        <Stat label="Estações INMET" value="[N]" note="na área de estudo" />
+        <Stat label="Cenários simulados" value="[N]" note="Monte Carlo" />
+      </div>
+      <p class="max-prose">[Resultado principal em uma frase, com o número do artigo.]</p>
+    </TabPanel>
+  </Tabs>
+</Section>
+
+<Section address="0x02" title="O que aprendi">
+  <Learned items={[
+    { code: 'R/01', text: '[Aprendizado sobre os dados.]' },
+    { code: 'R/02', text: '[Aprendizado sobre o método.]' },
+    { code: 'R/03', text: '[O que eu faria diferente.]' },
+  ]} />
+</Section>
