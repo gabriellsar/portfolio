@@ -128,8 +128,9 @@ function rng(seed: number) {
   return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
 }
 const pad0 = (n: number, w: number) => String(n).padStart(w, '0');
-export function Heightmap({ cols = 56, rows = 14, seed = 42, marker = true, caption = true, peak = false, label = 'Mapa de altura gerado por ruído' }: {
-  cols?: number; rows?: number; seed?: number; marker?: boolean; caption?: boolean | string; peak?: boolean; label?: string;
+/** `sky={false}` tira os pontos acima do relevo (fica só uma fileira sobre a crista): o terreno vira o chão da página. */
+export function Heightmap({ cols = 56, rows = 14, seed = 42, marker = true, caption = true, peak = false, sky = true, label = 'Mapa de altura gerado por ruído' }: {
+  cols?: number; rows?: number; seed?: number; marker?: boolean; caption?: boolean | string; peak?: boolean; sky?: boolean; label?: string;
 }) {
   const data = useMemo(() => {
     const r = rng(seed);
@@ -141,13 +142,13 @@ export function Heightmap({ cols = 56, rows = 14, seed = 42, marker = true, capt
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const t = height(x) - (rows - 1 - y);
-        if (t < 0) dots.push({ x, y, r: 1, k: 'gs-hm-dot', o: 1 });
+        if (t < 0) { if (sky || t >= -1) dots.push({ x, y, r: 1, k: 'gs-hm-dot', o: 1 }); }
         else if (t < 1.1) dots.push({ x, y, r: 4.5, k: 'gs-hm-on', o: 1 });
         else dots.push({ x, y, r: Math.max(1.5, 4 - t * 0.35), k: 'gs-hm-on', o: Math.max(0.16, 0.7 - t * 0.07) });
       }
     }
     return { dots, px: peak, py: rows - 1 - Math.floor(peakH), ph: Math.floor(peakH) };
-  }, [cols, rows, seed]);
+  }, [cols, rows, seed, sky]);
   return (
     <figure className="gs-hm">
       {caption !== false && (
