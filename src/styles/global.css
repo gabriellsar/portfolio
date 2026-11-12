@@ -70,10 +70,14 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
 
 /* ---------- projetos ---------- */
 .pf-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px; }
-.pf-cards .gs-card { height: 100%; box-sizing: border-box; }
-.pf-cards .gs-card-body { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-.pf-cards .gs-card-meta { margin: 0; }
-.pf-cta { margin-top: auto; padding-top: 8px; }
+/* subgrid: cada bloco do card (topo, título, descrição, tags, tecnologia, CTA)
+   ocupa uma linha compartilhada, então tudo fica alinhado entre os cards da fileira */
+.pf-cards > .gs-card, .pf-cards > .pf-item, .pf-item > .gs-card { grid-row: span 6; display: grid; grid-template-rows: subgrid; }
+.pf-cards .gs-card { box-sizing: border-box; row-gap: var(--space-3); align-content: start; }
+.pf-cards .gs-card-body { display: contents; }
+.pf-cards .gs-card-body > :not(:first-child) { margin-top: var(--space-1); }
+.pf-cards .gs-card-meta { margin: var(--space-1) 0 0; align-self: start; }
+.pf-cta { align-self: start; padding-top: 8px; }
 .pf-row { display: grid; grid-template-columns: 72px minmax(0, 1.6fr) minmax(0, 2fr) minmax(0, 1.2fr) 20px; gap: 20px; align-items: center; min-height: 52px; padding: 0 8px; border-top: 1px solid var(--line); color: var(--text); text-decoration: none; transition: background-color var(--dur-fast) var(--ease-out); }
 .pf-row:hover { background: var(--surface); color: var(--text); }
 .pf-row:hover .pf-arrow { transform: translateX(4px); }
