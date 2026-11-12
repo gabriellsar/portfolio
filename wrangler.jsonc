@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Precisa ter o mesmo nome do Worker no painel da Cloudflare
+  "name": "portfolio",
+  "compatibility_date": "2026-11-12",
+  // Site estático: o Worker só serve a saída do `astro build`
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  // Exigido pelo `wrangler preview` (builds das branches fora da main).
+  // Vazio porque o site não tem variáveis nem bindings.
+  "previews": {}
+}
