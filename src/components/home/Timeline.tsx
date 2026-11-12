@@ -17,7 +17,7 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
               <span aria-hidden="true" className={`tl-dot${isOpen ? ' is-open' : ''}`} />
               <div className="tl-head">
                 <div className="tl-head-text">
-                  <p className="mono-label" style={{ color: 'var(--accent)' }}>{it.code} · {it.area}</p>
+                  <p className="mono-label" style={{ color: 'var(--accent)' }}>{it.code} · {it.area_out}</p>
                   <h3 className="tl-org">{it.org}</h3>
                   <p style={{ margin: 0, fontSize: 16, fontWeight: 400 }}>{it.role}</p>
                 </div>
@@ -73,7 +73,7 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                   </div>
                   <div className="tl-side">
                     <DataBlock rows={[
-                      { k: 'Área', v: it.area },
+                      { k: 'Área', v: it.area_in },
                       { k: 'Período', v: it.periodo },
                       { k: 'Projeto', v: it.projeto ? <a href={it.projeto.href}>{it.projeto.label}</a> : '—' },
                     ]} />

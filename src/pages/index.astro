@@ -39,7 +39,6 @@ const canais = [
           <a href={mailto} class="gs-btn gs-btn-primary link-plain">[ E-mail ]</a>
           <a href={site.github} class="gs-btn link-plain" rel="me"> GitHub ↗ </a>
           <a href={linkedinHref} class="gs-btn link-plain" rel="me"> LinkedIn ↗ </a>
-          <a href="#projetos" class="gs-btn gs-btn-ghost link-plain hero-ls">ls ./projetos →</a>
         </div>
       </div>
 
@@ -154,18 +153,6 @@ const canais = [
       <Timeline client:visible items={trajetoria} initial={trajetoriaAberta} />
     </section>
 
-    <section id="contato" style="display: flex; flex-direction: column; gap: 24px">
-      <SectionHeader address="0x03" title="Contato" />
-      <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start">
-        <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 20px">
-          <p style="margin: 0; font-size: clamp(32px, 4vw, 44px); line-height: 1.1; font-weight: 200; letter-spacing: -0.02em; color: var(--text-strong)">Aberto a estágio em dados, IA e engenharia.</p>
-          <div class="contato-ctas" style="display: flex; flex-wrap: wrap; gap: 12px">
-            <a href={mailto} class="gs-btn gs-btn-primary link-plain">Mandar e-mail</a>
-            <a href={site.cv} class="gs-btn link-plain" download>Baixar CV</a>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
   <script>
     document.querySelectorAll('[data-open-shell]').forEach((b) =>

@@ -11,7 +11,8 @@ export type Etapa = {
   code: string;
   org: string;
   role: string;
-  area: string;
+  area_in: string;
+  area_out: string;
   periodo: string;
   resumo: string;
   feitos?: string[]; // opcional: etapas com subs podem não ter
@@ -26,7 +27,8 @@ export const trajetoria: Etapa[] = [
     code: 'T/01',
     org: 'MJV Technology & Innovation',
     role: 'Estagiário de Inovação',
-    area: 'Mercado',
+    area_in: 'Seguros',
+    area_out: 'Mercado',
     periodo: 'jan/2026 – presente',
     resumo: 'Consultoria em inovação: estruturação de modelos de processos de negócio a partir de dados operacionais.',
     feitos: [
@@ -41,7 +43,8 @@ export const trajetoria: Etapa[] = [
     code: 'T/02',
     org: 'FROG · PUC-Rio',
     role: 'Pesquisador de Iniciação Científica',
-    area: 'Pesquisa',
+    area_in: 'Energia Renovável',
+    area_out: 'Pesquisa',
     periodo: 'mar/2025 – mar/2026',
     resumo: 'Iniciação científica no Depto. de Eng. Industrial. Construí o WindAnalyzer, ferramenta de apoio à decisão que troca a curva de potência do fabricante por uma projeção probabilística aprendida com os dados do parque eólico.',
     feitos: [
@@ -58,7 +61,8 @@ export const trajetoria: Etapa[] = [
     code: 'T/03',
     org: 'Instrumento.io',
     role: 'Analista de Sistemas',
-    area: 'Mercado',
+    area_in: 'Educação',
+    area_out: 'Mercado',
     periodo: 'out/2024 – set/2025',
     resumo: 'Manutenção e evolução da plataforma da startup, construída em Bubble (low-code), de ponta a ponta no ciclo de desenvolvimento.',
     feitos: [
@@ -73,7 +77,8 @@ export const trajetoria: Etapa[] = [
     code: 'T/04',
     org: 'PUC-Rio',
     role: 'Monitoria',
-    area: 'Ensino',
+    area_in: 'Educação',
+    area_out: 'Ensino',
     periodo: 'mar/2023 – dez/2024',
     resumo: 'Duas monitorias na graduação, uma em dados e outra em gestão de projetos de engenharia.',
     subs: [
