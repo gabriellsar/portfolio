@@ -15,14 +15,24 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
             <p className="tl-date">{it.periodo}</p>
             <div className="tl-body">
               <span aria-hidden="true" className={`tl-dot${isOpen ? ' is-open' : ''}`} />
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div className="tl-head">
+                <div className="tl-head-text">
                   <p className="mono-label" style={{ color: 'var(--accent)' }}>{it.code} · {it.area}</p>
-                  <h3 style={{ margin: 0, fontSize: 28, lineHeight: 1.25, fontWeight: 300, color: 'var(--text-strong)' }}>{it.org}</h3>
+                  <h3 className="tl-org">{it.org}</h3>
                   <p style={{ margin: 0, fontSize: 16, fontWeight: 400 }}>{it.role}</p>
                 </div>
-                <button type="button" className="gs-btn gs-btn-sm" aria-expanded={isOpen} aria-controls={panel} onClick={() => setOpen(isOpen ? null : it.id)}>
-                  {isOpen ? 'Fechar −' : 'Detalhes +'}
+                <button
+                  type="button"
+                  className="gs-btn gs-btn-sm tl-toggle"
+                  aria-expanded={isOpen}
+                  aria-controls={panel}
+                  aria-label={`${isOpen ? 'Fechar' : 'Ver'} detalhes: ${it.org}`}
+                  onClick={() => setOpen(isOpen ? null : it.id)}
+                >
+                  <span className="tl-toggle-text">{isOpen ? 'Fechar −' : 'Detalhes +'}</span>
+                  <svg className="tl-toggle-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    {isOpen ? <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" /> : <path d="M9 3v12M3 9h12" />}
+                  </svg>
                 </button>
               </div>
               {isOpen && (

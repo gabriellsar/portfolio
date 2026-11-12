@@ -35,16 +35,21 @@ const canais = [
 
       <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 12px">
         <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> contato --abrir</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <div class="hero-ctas" style="display: flex; flex-wrap: wrap; gap: 12px">
           <a href={mailto} class="gs-btn gs-btn-primary link-plain">[ E-mail ]</a>
           <a href={site.github} class="gs-btn link-plain" rel="me">[ GitHub ↗ ]</a>
           <a href={linkedinHref} class="gs-btn link-plain" rel="me">[ LinkedIn ↗ ]</a>
-          <a href="#projetos" class="gs-btn gs-btn-ghost link-plain">ls ./projetos →</a>
+          <a href="#projetos" class="gs-btn gs-btn-ghost link-plain hero-ls">ls ./projetos →</a>
         </div>
       </div>
 
       <p class="hero-hint"># psst… Aperte <button type="button" class="hero-key" data-open-shell aria-label="Abrir o terminal">:</button> ou <kbd class="hero-key">Ctrl</kbd>+<kbd class="hero-key">K</kbd> e digite <span class="hero-hint-cmd">help</span>.</p>
     </div>
+
+    <a href="#projetos" class="hero-scroll link-plain" aria-label="Rolar até os projetos">
+      <span class="mono-label">0x01 · Projetos</span>
+      <span class="hero-scroll-track" aria-hidden="true"><span></span></span>
+    </a>
   </div>
 
   <main class="wrap" style="padding-top: 88px; display: flex; flex-direction: column; gap: 88px">
@@ -62,7 +67,7 @@ const canais = [
             <dl class="gs-card-meta"><dt>Base</dt><dd>{p.base}</dd></dl>
             <div class="pf-cta">
               {p.caseStudy
-                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão ampliada →</a>
+                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão ampliada <span class="pf-cta-arrow" aria-hidden="true">→</span></a>
                 : <button type="button" class="gs-btn" disabled>Visão ampliada · em breve</button>}
             </div>
           </Card>
@@ -79,7 +84,10 @@ const canais = [
           return (
             <a href={p.href} class="pf-row">
               <span style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--muted)">{p.code}</span>
-              <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 16px; font-weight: 400; color: var(--text-strong)">{p.title}{p.status && <Tag tone="caution">{statusLabel[p.status]}</Tag>}</span>
+              <span class="pf-main">
+                <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 16px; font-weight: 400; color: var(--text-strong)">{p.title}{p.status && <Tag tone="caution">{statusLabel[p.status]}</Tag>}</span>
+                <span class="pf-sub">{p.base}</span>
+              </span>
               <span class="pf-hide" style="font-size: 14px; font-weight: 400; color: var(--muted)">{p.topics.join(' · ')}</span>
               <span class="pf-hide" style="font-family: var(--font-mono); font-size: 12px; color: var(--text)">{p.base}</span>
               <span class="pf-arrow" aria-hidden="true">→</span>
@@ -91,7 +99,10 @@ const canais = [
     </section>
 
     <section id="ferramentas" aria-label="Ferramentas principais" style="display: flex; flex-direction: column; gap: 20px">
-      <p class="mono-label">Ferramentas</p>
+      <div class="stack-head">
+        <p class="mono-label">Ferramentas</p>
+        <span class="stack-count">{stack.length} áreas · {total} itens</span>
+      </div>
       <div class="term">
         <div class="term-bar">
           <span><span style="color: var(--text-strong)">1:zsh</span>  <span style="color: var(--line-strong)">│</span>  ~/stack</span>
@@ -104,8 +115,9 @@ const canais = [
             <span style="background: var(--surface); color: var(--muted)">git:main</span>
             <span style="padding-left: 12px; color: var(--text-strong)">ls -l --group</span>
           </p>
+          <p class="term-mprompt"><span style="color: var(--accent)">~/stack</span><span style="color: var(--muted)"> $</span> ls</p>
           <div role="table" aria-label="Ferramentas por área" style="display: flex; flex-direction: column">
-            <p style="margin: 0 0 6px; color: var(--muted)">total {stack.length}</p>
+            <p class="term-total" style="margin: 0 0 6px; color: var(--muted)">total {stack.length}</p>
             {stack.map((d) => {
               const known = d.items.filter((i) => !i.startsWith('['));
               const count = d.items.some((i) => i.startsWith('[')) ? '[n]' : String(known.length);
@@ -124,13 +136,13 @@ const canais = [
             })}
           </div>
           <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
-            <p style="margin: 0; color: var(--muted)">{stack.length} diretórios · <span style="color: var(--text)">{total}+</span> ferramentas</p>
+            <p class="term-stats" style="margin: 0; color: var(--muted)">{stack.length} diretórios · <span style="color: var(--text)">{total}+</span> ferramentas</p>
             <div style="display: flex; align-items: center; gap: 14px">
               <Palette label="Paleta do design system gabriellsar" />
-              <span style="font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">{sistema}</span>
+              <span class="term-sys" style="font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">{sistema}</span>
             </div>
           </div>
-          <p style="margin: 0; display: flex; align-items: center"><span style="color: var(--accent)">gabriel@arch</span><span style="color: var(--muted)">:~/stack$</span><span aria-hidden="true" style="display: inline-block; width: 8px; height: 16px; margin-left: 8px; background: var(--accent)"></span></p>
+          <p class="term-end" style="margin: 0; display: flex; align-items: center"><span style="color: var(--accent)">gabriel@arch</span><span style="color: var(--muted)">:~/stack$</span><span aria-hidden="true" style="display: inline-block; width: 8px; height: 16px; margin-left: 8px; background: var(--accent)"></span></p>
         </div>
       </div>
     </section>
@@ -147,7 +159,7 @@ const canais = [
       <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start">
         <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 20px">
           <p style="margin: 0; font-size: clamp(32px, 4vw, 44px); line-height: 1.1; font-weight: 200; letter-spacing: -0.02em; color: var(--text-strong)">Aberto a estágio em dados, IA e engenharia.</p>
-          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+          <div class="contato-ctas" style="display: flex; flex-wrap: wrap; gap: 12px">
             <a href={mailto} class="gs-btn gs-btn-primary link-plain">Mandar e-mail</a>
             <a href={site.cv} class="gs-btn link-plain" download>Baixar CV</a>
           </div>

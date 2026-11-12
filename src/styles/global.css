@@ -172,3 +172,93 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
   .tmux-theme { font-size: 0; gap: 0; }
   .tmux-theme .dot { font-size: 12px; }
 }
+
+/* ---------- peças novas (desktop) ---------- */
+.site-footer { margin-top: 120px; border-top: 1px solid var(--line); }
+.foot-top { padding-top: 64px; padding-bottom: 48px; display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; align-items: flex-start; }
+.foot-hm-mob { display: none; }
+.hero-scroll { display: none; }
+.pf-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pf-sub { display: none; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; color: var(--muted); }
+.stack-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.stack-count { display: none; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.term-mprompt { display: none; margin: 0; }
+.tl-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.tl-head-text { display: flex; flex-direction: column; gap: 6px; }
+.tl-org { margin: 0; font-size: 28px; line-height: 1.25; font-weight: 300; color: var(--text-strong); }
+.tl-toggle-icon { display: none; }
+@keyframes gs-scroll { from { transform: translateY(-12px); } to { transform: translateY(32px); } }
+
+/* ---------- telefone (abaixo de bp-sm): sem barra tmux, sem terminal ---------- */
+@media (max-width: 640px) {
+  html { scroll-padding-top: 0; }
+  .tmux { display: none; }
+
+  /* capa */
+  .hero { min-height: 100vh; min-height: 100svh; }
+  .hero-inner { padding-top: 40px; padding-bottom: 120px; }
+  .hero-name { font-size: min(72px, 12.8vw); }
+  .prompt { font-size: 13px; }
+  .hero-hint, .hero-ls { display: none; }
+  .hero-ctas .gs-btn { flex: 1 1 calc(50% - 6px); height: 48px; }
+  .hero-ctas .gs-btn-primary { flex-basis: 100%; }
+  .hero-scroll { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; }
+  .hero-scroll .mono-label { font-size: 11px; white-space: nowrap; }
+  .hero-scroll-track { position: relative; display: block; width: 1px; height: 32px; overflow: hidden; background: var(--line-strong); }
+  .hero-scroll-track span { position: absolute; left: 0; top: 0; width: 1px; height: 12px; background: var(--accent); animation: gs-scroll 1.8s var(--ease-out) infinite; }
+
+  /* títulos de seção */
+  .gs-sh-title { font-size: 36px; }
+  .gs-sh-addr { display: block; margin: 0 0 10px; }
+
+  /* projetos */
+  .pf-cards { gap: 16px; }
+  .pf-cards .gs-card { padding: 20px; }
+  .pf-cards .gs-card-title { font-size: 24px; }
+  .pf-cta { margin: 4px -20px -20px; padding-top: 0; }
+  .pf-cta .gs-btn { width: 100%; height: 52px; justify-content: space-between; padding: 0 20px; background: transparent; border: 0; border-top: 1px solid var(--line-strong); color: var(--text-strong); font-weight: 400; }
+  .pf-cta .gs-btn:hover { background: var(--inset); border-color: var(--line-strong); color: var(--text-strong); }
+  .pf-cta-arrow { font-size: 14px; color: var(--accent); }
+  .pf-row { grid-template-columns: 48px minmax(0, 1fr) 20px; gap: 12px; min-height: 72px; padding: 12px 4px; }
+  .pf-sub { display: block; }
+
+  /* ferramentas: lista limpa no lugar do terminal */
+  .stack-count { display: inline; }
+  .term { background: transparent; border: 0; }
+  .term-bar, .seg, .term-total, .term-stats, .term .palette, .term-end { display: none !important; }
+  .term-body { padding: 0; gap: 20px; }
+  .term-mprompt { display: block; font-size: 13px; }
+  .ls-row { display: flex; flex-direction: column; gap: 6px; padding: 16px 0; }
+  .ls-row:hover { background: transparent; }
+  .ls-row > [role="cell"]:nth-child(2) { font-size: 12px; letter-spacing: 0.08em; }
+  .ls-row > [role="cell"]:nth-child(3) { font-size: 14px; line-height: 1.7; }
+  .ls-row > [role="cell"]:last-child { display: none; }
+  .term-sys::after { content: ""; display: inline-block; width: 7px; height: 14px; margin-left: 8px; vertical-align: -2px; background: var(--accent); }
+
+  /* trajetória: + / × discretos */
+  .tl-head { flex-wrap: nowrap; gap: 12px; }
+  .tl-head-text { flex: 1; min-width: 0; }
+  .tl-org { font-size: 24px; }
+  .tl-toggle { flex: none; width: 44px; height: 44px; padding: 0; margin: -6px -10px 0 0; border: 0; color: var(--muted); }
+  .tl-toggle:hover { border: 0; color: var(--text-strong); }
+  .tl-toggle[aria-expanded="true"] { color: var(--text-strong); }
+  .tl-toggle-text { display: none; }
+  .tl-toggle-icon { display: block; }
+  .tl-panel { padding: 20px; gap: 24px; }
+
+  /* contato */
+  .contato-ctas .gs-btn { flex: 1 1 100%; height: 48px; }
+
+  /* rodapé: o relevo vira o chão da página */
+  .site-footer { margin-top: 72px; display: flex; flex-direction: column; }
+  .site-footer > .wrap { width: 100%; }
+  .foot-top { padding-top: 40px; padding-bottom: 16px; gap: 16px; }
+  .foot-col, .foot-hm-desk, .foot-fig { display: none; }
+  .foot-bottom { align-items: center; padding-bottom: 0; }
+  .foot-bottom a { display: inline-flex; align-items: center; min-height: 44px; }
+  .foot-hm-mob { display: block; padding-top: 8px; }
+  .foot-hm-mob .gs-hm { padding: 0; border: 0; }
+}
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .hero-scroll-track span { animation: none; }
+}
