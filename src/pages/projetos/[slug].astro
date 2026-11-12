@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import { render } from 'astro:content';
 import { DataBlock, Tag } from '@/components/ui';
-import { getProjects } from '@/lib/projects';
+import { getProjects, statusLabel } from '@/lib/projects';
 
 export async function getStaticPaths() {
   const all = await getProjects();
@@ -17,7 +17,7 @@ const p = entry.data;
 const { Content } = await render(entry);
 const linkOf = (e?: typeof entry) => (e ? (e.data.caseStudy ? `/projetos/${e.id}` : `/projetos#${e.data.code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`) : '/projetos');
 ---
-<Layout title={`${p.title} — estudo de caso · gabriel.r`} description={p.lead ?? p.desc} active="projetos">
+<Layout title={`${p.title} — estudo de caso · gabriellsar`} description={p.lead ?? p.desc} active="projetos">
   <main class="wrap" style="display: flex; flex-direction: column; gap: 72px">
     <section style="display: flex; flex-direction: column; gap: 32px; padding-top: 48px">
       <a href="/projetos" class="mono-label link-plain" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px">← Todos os projetos</a>
@@ -26,9 +26,16 @@ const linkOf = (e?: typeof entry) => (e ? (e.data.caseStudy ? `/projetos/${e.id}
           <p class="mono-label" style="color: var(--accent)">{p.eyebrow ?? p.code}</p>
           <h1 style="margin: 0; font-size: clamp(56px, 8vw, 88px); line-height: 0.98; font-weight: 200; letter-spacing: -0.035em; color: var(--text-strong)">{p.title}</h1>
           <p style="margin: 0; max-width: 600px; font-size: 19px; line-height: 1.6">{p.lead ?? p.desc}</p>
-          {p.tags && (
+          {(p.tags || p.status) && (
             <div style="display: flex; flex-wrap: wrap; gap: 8px">
-              {p.tags.map((t) => <Tag tone={t.tone}>{t.label}</Tag>)}
+              {p.status && <Tag tone="caution">{statusLabel[p.status]}</Tag>}
+              {p.tags?.map((t) => <Tag tone={t.tone}>{t.label}</Tag>)}
+            </div>
+          )}
+          {(p.repo || p.app) && (
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              {p.app && <a href={p.app} class="gs-btn gs-btn-primary link-plain">Abrir o app ↗</a>}
+              {p.repo && <a href={p.repo} class="gs-btn gs-btn-ghost link-plain">Código ↗</a>}
             </div>
           )}
         </div>

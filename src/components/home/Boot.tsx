@@ -3,11 +3,11 @@ import { Progress } from '@/components/ui';
 
 const END = 70;
 const MSGS: [string, string, string][] = [
-  ['GS-BOOT v0.3 · gabriel.r', '', 'muted'],
+  ['GS-BOOT v0.3 · gabriellsar', '', 'muted'],
   ['verificando memória ................', 'ok', 'accent'],
   ['montando /portfolio ................', 'ok', 'accent'],
   ['carregando tokens ..................', 'ok', 'accent'],
-  ['iniciando design system gabriel.r ..', 'ok', 'accent'],
+  ['iniciando gabriellsar ..............', 'ok', 'accent'],
   ['PUC-Rio · Eng. de Computação .......', '2027.2', 'text'],
 ];
 
@@ -33,7 +33,7 @@ export default function Boot({ location }: { location: string }) {
   if (!show) return null;
   const skip = () => { clearInterval(timer.current); setShow(false); };
   const cmd = 'whoami'.slice(0, Math.max(0, Math.min(6, t - 28)));
-  const name = 'gabriel.r'.slice(0, Math.max(0, Math.min(9, t - 38)));
+  const name = 'gabriellsar'.slice(0, Math.max(0, Math.min(11, t - 38)));
   const blink = Math.floor(t / 5) % 2 === 0 ? 1 : 0;
   const pct = Math.min(100, Math.round((t / END) * 100));
 
@@ -57,7 +57,7 @@ export default function Boot({ location }: { location: string }) {
               <span style={{ display: 'inline-block', width: 8, height: 16, marginLeft: 2, verticalAlign: -2, background: 'var(--accent)', opacity: t >= 37 ? 0 : blink }} />
             </p>
             {t >= 37 && (
-              <p className="boot-name">{name}<span style={{ display: 'inline-block', width: '0.5em', height: '0.82em', marginLeft: '0.06em', verticalAlign: '-0.06em', background: 'var(--accent)', opacity: t >= 47 ? blink : 1 }} /></p>
+              <p className="boot-name">{name}<span style={{ display: 'inline-block', width: '0.5em', height: '0.82em', marginLeft: '0.06em', verticalAlign: '-0.06em', background: 'var(--accent)', opacity: t >= 49 ? blink : 1 }} /></p>
             )}
           </div>
         )}

@@ -68,7 +68,7 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
   return (
     <nav className="tmux" aria-label="Principal">
       <div className="tmux-left">
-        <a href={isHome ? '#topo' : '/'} className="tmux-brand">{sh ? 'CMD' : 'gabriel.r'}</a>
+        <a href={isHome ? '#topo' : '/'} className="tmux-brand">{sh ? 'CMD' : 'gabriellsar'}</a>
         {TABS.map((t) => {
           const on = t.id === active;
           return (

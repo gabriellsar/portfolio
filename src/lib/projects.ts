@@ -11,7 +11,11 @@ export type ProjectLite = {
   href: string;
   caseStudy: boolean;
   anchor: string;
+  status?: 'em-andamento';
 };
+
+/** Rótulo do selo de status nos cards. */
+export const statusLabel = { 'em-andamento': 'em andamento' } as const;
 
 export const anchorOf = (code: string) => code.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
@@ -30,6 +34,7 @@ export function lite(p: Project): ProjectLite {
     base: p.data.base,
     caseStudy: p.data.caseStudy,
     anchor,
+    status: p.data.status,
     href: p.data.caseStudy ? `/projetos/${p.id}` : `/projetos#${anchor}`,
   };
 }

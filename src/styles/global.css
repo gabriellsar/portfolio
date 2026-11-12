@@ -95,6 +95,8 @@ a:hover { color: var(--text-strong); }
 .tl-dot { position: absolute; left: -6px; top: 32px; width: 11px; height: 11px; border-radius: 50%; background: var(--control); box-shadow: 0 0 0 4px var(--bg); }
 .tl-dot.is-open { background: var(--accent); }
 .tl-panel { display: flex; flex-wrap: wrap; gap: 32px; padding: 24px; background: var(--surface); border: 1px solid var(--line-strong); }
+.tl-subs { display: flex; flex-wrap: wrap; gap: 16px; }
+.tl-sub { flex: 1 1 260px; display: flex; flex-direction: column; gap: 14px; padding: 20px; background: var(--bg); border: 1px solid var(--line-strong); }
 .bullets { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .bullets li { display: flex; gap: 12px; font-size: 15px; line-height: 1.5; font-weight: 400; }
 .bullets li::before { content: "—"; font-family: var(--font-mono); color: var(--accent); }

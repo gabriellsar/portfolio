@@ -13,6 +13,8 @@ const projects = defineCollection({
     destaque: z.number().int().min(1).max(3).optional(),
     caseStudy: z.boolean().default(false),
     repo: z.string().url().optional(),
+    app: z.string().url().optional(), // app no ar
+    status: z.enum(['em-andamento']).optional(),
     // campos do estudo de caso
     eyebrow: z.string().optional(),
     lead: z.string().optional(),
