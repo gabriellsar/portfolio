@@ -22,9 +22,9 @@ const linkOf = (e?: typeof entry) => (e ? (e.data.caseStudy ? `/projetos/${e.id}
     <section style="display: flex; flex-direction: column; gap: 32px; padding-top: 48px">
       <a href="/projetos" class="mono-label link-plain" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px">← Todos os projetos</a>
       <div style="display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-end">
-        <div style="flex: 1 1 560px; display: flex; flex-direction: column; gap: 20px">
+        <div style="flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
           <p class="mono-label" style="color: var(--accent)">{p.eyebrow ?? p.code}</p>
-          <h1 style="margin: 0; font-size: clamp(56px, 8vw, 88px); line-height: 0.98; font-weight: 200; letter-spacing: -0.035em; color: var(--text-strong)">{p.title}</h1>
+          <h1 class="study-title" style="margin: 0; font-size: clamp(56px, 8vw, 88px); line-height: 0.98; font-weight: 200; letter-spacing: -0.035em; color: var(--text-strong)">{p.title}</h1>
           <p style="margin: 0; max-width: 600px; font-size: 19px; line-height: 1.6">{p.lead ?? p.desc}</p>
           {(p.tags || p.status) && (
             <div style="display: flex; flex-wrap: wrap; gap: 8px">
