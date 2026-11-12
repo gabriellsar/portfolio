@@ -42,6 +42,8 @@ const canais = [
           <a href="#projetos" class="gs-btn gs-btn-ghost link-plain">ls ./projetos →</a>
         </div>
       </div>
+
+      <p class="hero-hint"># psst… Aperte <button type="button" class="hero-key" data-open-shell aria-label="Abrir o terminal">:</button> ou <kbd class="hero-key">Ctrl</kbd>+<kbd class="hero-key">K</kbd> e digite <span class="hero-hint-cmd">help</span>.</p>
     </div>
   </div>
 
@@ -156,4 +158,8 @@ const canais = [
       </div>
     </section>
   </main>
+  <script>
+    document.querySelectorAll('[data-open-shell]').forEach((b) =>
+      b.addEventListener('click', () => window.dispatchEvent(new KeyboardEvent('keydown', { key: ':' }))));
+  </script>
 </Layout>
