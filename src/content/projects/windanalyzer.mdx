@@ -25,9 +25,9 @@ ficha:
   - { k: Registro, v: INPI BR512026006513-5 }
   - { k: Período, v: mar/2025 – mar/2026 }
 figura:
-  alt: Interface do WindAnalyzer
-  legenda: FIG.03 — INTERFACE DO WINDANALYZER
-  data: "[DATA DA CAPTURA]"
+  src: /projetos/windanalyzer/home.png
+  alt: Página inicial do WindAnalyzer, com o botão para iniciar a análise e os três módulos da ferramenta
+  legenda: FIG.03 — PÁGINA INICIAL DO WINDANALYZER
 ---
 
 import Section from '@/components/study/Section.astro';
@@ -40,36 +40,48 @@ import { Card, Stat } from '@/components/ui';
   <Tabs items={[{ id: 'problema', label: 'O problema' }, { id: 'metodos', label: 'Os métodos', count: 4 }, { id: 'resultado', label: 'O resultado' }]}>
     <TabPanel id="problema">
       <div class="split">
-        <p class="statement">Vento não obedece a uma distribuição bem-comportada. Forçar uma forma pronta esconde justamente os padrões que importam.</p>
+        <p class="statement">A curva de potência do fabricante descreve uma turbina sozinha, em condições ideais. Um parque eólico real não se comporta assim.</p>
         <div class="split-side">
-          <p>A reanálise MERRA-2 cobre tudo, mas tem viés; as estações do INMET medem de verdade, mas só onde existem. O trabalho junta as duas fontes e modela o resultado sem supor distribuição.</p>
-          <p class="muted">[Contexto: quem usa o resultado e para quê.]</p>
+          <p>Projetar a geração esbarra em dois obstáculos: faltam séries longas de vento medidas no local, e a conversão de vento em potência é incerta. Na mesma faixa de velocidade, a potência varia em centenas de quilowatts.</p>
+          <p>Os métodos não paramétricos que tratam essa incerteza são mais precisos, mas difíceis de implementar. O WindAnalyzer transforma duas metodologias publicadas em uma ferramenta interativa de apoio à decisão.</p>
         </div>
       </div>
     </TabPanel>
     <TabPanel id="metodos">
       <div class="auto-grid">
-        <Card id="M/01" title="Correção por razão" flat><p>Ajusta o viés da reanálise usando a razão com o que as estações mediram.</p></Card>
-        <Card id="M/02" title="K-means" flat><p>Separa regimes de vento parecidos antes de modelar cada um.</p></Card>
-        <Card id="M/03" title="KDE" flat><p>Estima a distribuição direto dos dados, sem impor uma forma.</p></Card>
-        <Card id="M/04" title="Monte Carlo" flat><p>Simula cenários a partir das distribuições estimadas.</p></Card>
+        <Card id="M/01" title="Série de vento" flat><p>Reanálise MERRA-2 para qualquer ponto do Brasil, extrapolada à altura do rotor e corrigida pela razão entre as médias da série e de uma estação do INMET.</p></Card>
+        <Card id="M/02" title="K-means" flat><p>Separa a série em regimes de vento. O número de clusters é escolhido sozinho, testando K de 1 a 30 pelo critério do cotovelo.</p></Card>
+        <Card id="M/03" title="KDE" flat><p>Estima a distribuição da potência em cada regime direto dos dados, com kernel gaussiano, sem impor uma família de distribuições.</p></Card>
+        <Card id="M/04" title="Monte Carlo" flat><p>Classifica cada velocidade projetada no seu regime e sorteia a potência das densidades estimadas, gerando cenários de geração.</p></Card>
       </div>
     </TabPanel>
     <TabPanel id="resultado">
       <div class="auto-grid">
-        <Stat label="Viés após correção" value="[—%]" note="vs. reanálise bruta" />
-        <Stat label="Estações INMET" value="[N]" note="na área de estudo" />
-        <Stat label="Cenários simulados" value="[N]" note="Monte Carlo" />
+        <Stat label="Banda de confiança" value="90%" note="percentis de 5% e 95% dos cenários" />
+        <Stat label="Clusters na demonstração" value="9" note="escolhidos pelo critério do cotovelo" />
+        <Stat label="Estratégias de estratificação" value="4" note="único · mensal · horária · mês-hora" />
       </div>
-      <p class="max-prose">[Resultado principal em uma frase, com o número do artigo.]</p>
+      <p class="max-prose">No caso de demonstração, com séries horárias de 2013 e 2014 e projeções de vento para 2025, a geração estimada reproduziu a tendência central e a dispersão da série histórica. As densidades estimadas saíram unimodais, bimodais e assimétricas, o que nenhuma família única de distribuições reproduziria ao mesmo tempo.</p>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
+        <img src="/projetos/windanalyzer/kde.png" alt="Curvas de densidade da potência estimadas por KDE para cada um dos clusters" loading="lazy" style="display: block; width: 100%; max-width: 900px; height: auto; border: 1px solid var(--line-strong)" />
+        <figcaption class="mono-label" style="font-size: 11px">FIG.03B — DENSIDADES DA POTÊNCIA ESTIMADAS POR CLUSTER</figcaption>
+      </figure>
     </TabPanel>
   </Tabs>
 </Section>
 
-<Section address="0x02" title="O que aprendi">
+<Section address="0x02" title="Engenharia">
   <Learned items={[
-    { code: 'R/01', text: '[Aprendizado sobre os dados.]' },
-    { code: 'R/02', text: '[Aprendizado sobre o método.]' },
-    { code: 'R/03', text: '[O que eu faria diferente.]' },
+    { code: 'E/01', text: 'Malha do MERRA-2 para o Brasil inteiro fragmentada em um arquivo Feather por ponto de grade, na nuvem. Cada consulta baixa só o ponto pedido, com autenticação OAuth 2.0.' },
+    { code: 'E/02', text: 'Código em Shiny Modules, separado em módulos de página, componentes visuais e utilitários de modelagem.' },
+    { code: 'E/03', text: 'Pipeline reativo: a modelagem só roda quando o usuário pede, e os resultados ficam em cache para alimentar todos os gráficos.' },
+  ]} />
+</Section>
+
+<Section address="0x03" title="Próximos passos">
+  <Learned items={[
+    { code: 'N/01', text: 'Aplicar a ferramenta a dados operacionais de parques eólicos brasileiros.' },
+    { code: 'N/02', text: 'Ampliar a camada de dados para outras bases de reanálise além do MERRA-2.' },
+    { code: 'N/03', text: 'Incorporar testes automatizados para apoiar a manutenção do código.' },
   ]} />
 </Section>
