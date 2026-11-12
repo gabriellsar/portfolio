@@ -3,7 +3,7 @@ export const site = {
   author: 'Gabriel',
   title: 'Gabriel Rosas',
   description:
-    'Engenharia de Computação na PUC-Rio. Pesquiso ML aplicado a dados e nuvem e gosto de levar o modelo do notebook até a produção.',
+    'Estudante de Engenharia de Computação na PUC-Rio. Pesquiso e construo soluções de machine learning aplicado e levo modelos do notebook até a produção.',
   location: 'RIO DE JANEIRO, BRASIL',
   email: 'gabrielsrosas@gmail.com',
   github: 'https://github.com/gabriellsar',

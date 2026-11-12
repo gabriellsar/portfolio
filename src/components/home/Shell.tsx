@@ -270,7 +270,7 @@ export default class Shell extends Component<Props, State> {
       const q = (a[1] || '').toLowerCase();
       const p = this.props.projects.find((x) => x.code.toLowerCase() === q || x.title.toLowerCase() === q);
       if (p && p.caseStudy) out.push({ kind: 'link', text: `→ abrir ${p.code} · ${p.title}`, href: p.href });
-      else out.push(T((q || '?').toUpperCase() + ' ainda não tem visão ampliada', 'muted'));
+      else out.push(T((q || '?').toUpperCase() + ' ainda não tem visão detalhada', 'muted'));
     } else if (a[0] === 'tema') {
       const nt: Theme | null = (a[1] === 'claro' || a[1] === 'light') ? 'light' : ((a[1] === 'escuro' || a[1] === 'dark') ? 'dark' : null);
       if (nt) { this.props.onTheme(nt); out.push(T('tema → ' + a[1], 'muted')); }

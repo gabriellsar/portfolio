@@ -23,11 +23,11 @@ const all = await getProjects();
             <div style="display: flex; flex-wrap: wrap; gap: 6px">
               {p.topics.map((t) => <Tag dot={false}>{t}</Tag>)}
             </div>
-            <dl class="gs-card-meta"><dt>Base</dt><dd>{p.base}</dd></dl>
+            <dl class="gs-card-meta"><dt>Tecnologia</dt><dd>{p.base}</dd></dl>
             <div class="pf-cta" style="display: flex; flex-wrap: wrap; gap: 8px">
               {p.caseStudy
-                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão ampliada →</a>
-                : <button type="button" class="gs-btn" disabled>Visão ampliada · em breve</button>}
+                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão detalhada →</a>
+                : <button type="button" class="gs-btn" disabled>Visão detalhada · em breve</button>}
               {p.repo && <a href={p.repo} class="gs-btn gs-btn-ghost link-plain">Código ↗</a>}
               {p.app && <a href={p.app} class="gs-btn gs-btn-ghost link-plain">App ↗</a>}
             </div>
