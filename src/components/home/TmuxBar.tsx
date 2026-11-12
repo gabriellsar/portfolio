@@ -30,7 +30,11 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
   useEffect(() => { setThemeState(readTheme()); }, []);
 
   const setTheme = useCallback((t: Theme) => {
-    document.documentElement.dataset.theme = t;
+    // cores mudam em 200 ms na troca de tema, e só durante a troca
+    const root = document.documentElement;
+    root.classList.add('theme-anim');
+    window.setTimeout(() => root.classList.remove('theme-anim'), 260);
+    root.dataset.theme = t;
     try { localStorage.setItem('gs-theme', t); } catch { /* armazenamento indisponível */ }
     setThemeState(t);
   }, []);

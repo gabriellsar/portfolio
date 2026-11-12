@@ -294,3 +294,40 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
 @media (max-width: 640px) and (prefers-reduced-motion: reduce) {
   .hero-scroll-track span { animation: none; }
 }
+
+/* ---------- transições de estado ---------- */
+/* trajetória: o painel abre por altura em vez de aparecer de uma vez */
+.tl-collapse { display: grid; grid-template-rows: 0fr; margin-top: -20px; opacity: 0; transition: grid-template-rows var(--dur-base) var(--ease-in), opacity var(--dur-fast) var(--ease-in); }
+.tl-collapse[data-open="true"] { grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); }
+.tl-collapse-inner { min-height: 0; overflow: hidden; }
+.tl-collapse-inner > .tl-panel { margin-top: 20px; transform: translateY(-6px); transition: transform var(--dur-base) var(--ease-out); }
+.tl-collapse[data-open="true"] .tl-panel { transform: none; }
+.tl-dot { transition: background-color var(--dur-base) var(--ease-out); }
+.tl-toggle-icon { transition: transform var(--dur-base) var(--ease-out); }
+.tl-toggle[aria-expanded="true"] .tl-toggle-icon { transform: rotate(45deg); }
+.tl-toggle { transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+
+/* setas que andam um pouco no hover */
+.pf-cta-arrow { display: inline-block; transition: transform var(--dur-fast) var(--ease-out); }
+.pf-cta .gs-btn:hover .pf-cta-arrow { transform: translateX(3px); }
+
+@keyframes gs-fade-up { from { opacity: 0; transform: translateY(6px); } }
+@keyframes gs-drop { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes gs-fade { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* abas dos estudos de caso: o painel novo entra em vez de piscar */
+  .gs-tabpanel:not([hidden]) { animation: gs-fade-up var(--dur-base) var(--ease-out); }
+  /* terminal desce da barra */
+  .sh:not([hidden]) { animation: gs-drop var(--dur-base) var(--ease-out); }
+  /* linhas do boot entram rápido, sem estalo */
+  .boot-line, .boot-name { animation: gs-fade var(--dur-fast) var(--ease-out); }
+  /* troca de tema: cores fazem a passagem em 200 ms */
+  html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+    transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), fill var(--dur-base) var(--ease-out), stroke var(--dur-base) var(--ease-out) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
+  .tl-collapse, .tl-collapse[data-open="true"] { transition: none; }
+}

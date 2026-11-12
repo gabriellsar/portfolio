@@ -30,12 +30,15 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                   onClick={() => setOpen(isOpen ? null : it.id)}
                 >
                   <span className="tl-toggle-text">{isOpen ? 'Fechar −' : 'Detalhes +'}</span>
+                  {/* um + só: gira 45° e vira × quando abre */}
                   <svg className="tl-toggle-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    {isOpen ? <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" /> : <path d="M9 3v12M3 9h12" />}
+                    <path d="M9 3v12M3 9h12" />
                   </svg>
                 </button>
               </div>
-              {isOpen && (
+              {/* O painel fica sempre montado e abre/fecha por altura (grid 0fr → 1fr); fechado, fica inerte */}
+              <div className="tl-collapse" data-open={isOpen ? 'true' : 'false'} inert={!isOpen}>
+                <div className="tl-collapse-inner">
                 <div className="tl-panel" id={panel}>
                   <div className="tl-main">
                     <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{it.resumo}</p>
@@ -76,7 +79,8 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                     ]} />
                   </div>
                 </div>
-              )}
+                </div>
+              </div>
             </div>
           </div>
         );
