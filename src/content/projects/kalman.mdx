@@ -1,0 +1,81 @@
+---
+code: P/02
+title: Kalman
+desc: "Hackathon VX: lê o Diário Oficial todo dia, cruza cada ato com as obrigações da empresa e transforma a mudança em tarefa com prazo e dono."
+topics: [IA generativa, agentes, lakehouse, serverless]
+base: AWS serverless · Bedrock AgentCore · Iceberg/DuckDB · React
+order: 2
+destaque: 2
+caseStudy: true
+repo: https://github.com/gabriellsar/kalman-hackathon-vx
+app: https://kalman-vx.lovable.app/painel?demo=dash
+eyebrow: P/02 · HACKATHON VX · DESAFIO 02
+lead: "Uma torre de controle regulatória: todo dia o Kalman lê o Diário Oficial da União, descobre quais atos mudam as obrigações de cada empresa e propõe a mudança, que só vale depois que uma pessoa aprova."
+tags:
+  - { label: Projeto em equipe, tone: accent }
+  - { label: AWS serverless }
+  - { label: Bedrock AgentCore }
+ficha:
+  - { k: Evento, v: Hackathon VX · torre de controle regulatória }
+  - { k: Nuvem, v: AWS · Lambda · Step Functions · API Gateway }
+  - { k: IA, v: Bedrock AgentCore · Guardrail · Knowledge Base }
+  - { k: Dados, v: S3 · Glue · Athena · Iceberg/DuckDB }
+  - { k: Front, v: React 19 · Vite }
+  - { k: Período, v: nov/2026 }
+figura:
+  src: /projetos/kalman/capa.png
+  alt: Marca do Kalman, várias linhas que convergem para um único ponto laranja
+  legenda: FIG.02 — KALMAN
+---
+
+import Section from '@/components/study/Section.astro';
+import Tabs from '@/components/study/Tabs.astro';
+import TabPanel from '@/components/study/TabPanel.astro';
+import Learned from '@/components/study/Learned.astro';
+import { Card, Stat } from '@/components/ui';
+
+<Section address="0x01" title="O estudo">
+  <Tabs items={[{ id: 'problema', label: 'O problema' }, { id: 'fluxo', label: 'Como funciona', count: 4 }, { id: 'resultado', label: 'O resultado' }]}>
+    <TabPanel id="problema">
+      <div class="split">
+        <p class="statement">O Diário Oficial publica cerca de 600 atos por dia. Quase nenhum importa para uma empresa específica, mas o que importa não pode passar.</p>
+        <div class="split-side">
+          <p>As ferramentas que existem filtram por palavra-chave: avisam que a palavra apareceu, não que a obrigação mudou. Quem acompanha acaba lendo tudo ou deixando passar o que importa.</p>
+          <p>O custo dos dois lados é alto: manter analistas de regulação dedicados a acompanhar o DOU, ou levar uma multa por descumprir uma norma que mudou.</p>
+        </div>
+      </div>
+    </TabPanel>
+    <TabPanel id="fluxo">
+      <div class="auto-grid">
+        <Card id="F/01" title="Leitura diária" flat><p>Um ETL agendado baixa o DOU, separa em atos e grava no lakehouse (S3, Glue, Iceberg e DuckDB), em camadas bronze, silver e gold.</p></Card>
+        <Card id="F/02" title="Busca por empresa" flat><p>Os atos viram trechos indexados com embeddings (Titan v2, S3 Vectors). Para cada obrigação vigente da empresa, a busca recupera os atos candidatos.</p></Card>
+        <Card id="F/03" title="Triagem e proposta" flat><p>Um modelo menor faz a triagem ("este ato muda alguma obrigação desta empresa?") e um maior escreve a proposta com o antes, o depois e o trecho da norma.</p></Card>
+        <Card id="F/04" title="Decisão humana" flat><p>O trecho citado é conferido em código e tem de existir no ato. Uma pessoa aprova ou rejeita; aprovado, as tarefas são recalculadas com prazo e área responsável.</p></Card>
+      </div>
+    </TabPanel>
+    <TabPanel id="resultado">
+      <div class="auto-grid">
+        <Stat label="Funil de uma semana do DOU" value="1.931 → 4" note="atos lidos → para decidir" />
+        <Stat label="Alertas na semana" value="9" note="contra 224 do filtro por palavra-chave" />
+        <Stat label="Alertas inúteis" value="3" note="contra 217 do filtro por palavra-chave" />
+      </div>
+      <p class="max-prose">Numa semana real do DOU, 1.931 atos lidos viraram 13 relevantes e 4 decisões. Para achar uma obrigação real, bastava ler 1,5 alerta, contra 32 no filtro por palavra-chave. A diferença vem de ler o ato inteiro e compará-lo com cada obrigação da empresa, em vez de procurar palavras.</p>
+    </TabPanel>
+  </Tabs>
+</Section>
+
+<Section address="0x02" title="Por que dá para confiar">
+  <Learned items={[
+    { code: 'C/01', text: 'Uma pessoa decide. A IA só propõe, e cada versão de uma obrigação guarda o ato, o dispositivo e o trecho citado.' },
+    { code: 'C/02', text: 'Histórico auditável. A matriz é recalculada por replay e nunca sobrescreve versões; cada etapa da IA grava eventos de auditoria.' },
+    { code: 'C/03', text: 'Isolamento por empresa e custo baixo. O usuário vem sempre do token do Cognito, e tudo roda em serviços gerenciados que só cobram pelo que executam.' },
+  ]} />
+</Section>
+
+<Section address="0x03" title="Próximos passos">
+  <Learned items={[
+    { code: 'N/01', text: 'Ligar o envio dos alertas por e-mail: o modelo está montado e testado, falta o agendamento.' },
+    { code: 'N/02', text: 'Recalibrar a classificação das empresas com mais cadastros (hoje foram duas).' },
+    { code: 'N/03', text: 'Medir o recall em campo, com clientes reais, o que ainda não foi feito.' },
+  ]} />
+</Section>

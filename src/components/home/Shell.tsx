@@ -5,6 +5,7 @@
 import { Component, createRef } from 'react';
 import { Palette } from '@/components/ui';
 import type { ProjectLite } from '@/lib/projects';
+import { stack } from '@/data/stack';
 
 type Theme = 'dark' | 'light';
 type Seg = { t: string; c: string };
@@ -31,7 +32,7 @@ type State = { out: Line[]; hist: string[]; hIdx: number; cmd: string; game: Gam
 
 const BS = '\\';
 const CHIPS = ['help', 'whoami', 'ls projetos', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'exit'];
-const COMPLETIONS = ['help', 'whoami', 'ls projetos', 'ls ferramentas', 'cd projetos', 'cd ferramentas', 'cd trajetoria', 'cd contato', 'open p/02', 'tema claro', 'tema escuro', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'sudo contratar', 'history', 'clear', 'exit', 'date'];
+const COMPLETIONS = ['help', 'whoami', 'ls projetos', 'ls ferramentas', 'cd projetos', 'cd ferramentas', 'cd trajetoria', 'cd contato', 'open p/03', 'tema claro', 'tema escuro', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'sudo contratar', 'history', 'clear', 'exit', 'date'];
 const PAD_KEYS = [
   { label: '←', k: 'ArrowLeft', aria: 'Esquerda' }, { label: '↑', k: 'ArrowUp', aria: 'Cima ou girar' },
   { label: '↓', k: 'ArrowDown', aria: 'Baixo' }, { label: '→', k: 'ArrowRight', aria: 'Direita' },
@@ -53,7 +54,7 @@ export default class Shell extends Component<Props, State> {
     if (this.outEl.current && (ps.out !== this.state.out || ps.g !== this.state.g)) this.outEl.current.scrollTop = this.outEl.current.scrollHeight;
   }
   onOpen() {
-    if (!this.state.out.length) this.setState({ out: [this.T('gabriel.r shell · digite help e aperte enter · tab completa · esc fecha', 'muted')] });
+    if (!this.state.out.length) this.setState({ out: [this.T('gabriellsar shell · digite help e aperte enter · tab completa · esc fecha', 'muted')] });
     requestAnimationFrame(() => this.input.current?.focus());
   }
   stopGame() { clearInterval(this.timer); if (this.state.game) this.setState({ game: null, g: null }); }
@@ -252,15 +253,15 @@ export default class Shell extends Component<Props, State> {
 
     if (lc === 'help') {
       const P = (c: string, d: string) => T('  ' + this.pad(c, 22) + d, 'text');
-      out.push(T('comandos', 'muted'), P('whoami', 'quem sou eu'), P('ls projetos', 'todos os projetos'), P('ls ferramentas', 'stack principal'), P('cd <seção>', 'projetos · ferramentas · trajetoria · contato'), P('open p/02', 'estudo de caso do WindAnalyzer'), P('tema claro|escuro', 'troca o tema'), P('neofetch', 'info do sistema'), P('cbonsai', 'planta uma árvore'), P('sudo play snake', 'cobrinha'), P('sudo play blocos', 'blocos caindo (alias: tetrix)'), P('sudo contratar', ';)'), P('history · clear · exit', ''), T('tab completa · ↑ histórico · esc fecha', 'muted'));
+      out.push(T('comandos', 'muted'), P('whoami', 'quem sou eu'), P('ls projetos', 'todos os projetos'), P('ls ferramentas', 'stack principal'), P('cd <seção>', 'projetos · ferramentas · trajetoria · contato'), P('open p/03', 'estudo de caso do WindAnalyzer'), P('tema claro|escuro', 'troca o tema'), P('neofetch', 'info do sistema'), P('cbonsai', 'planta uma árvore'), P('sudo play snake', 'cobrinha'), P('sudo play blocos', 'blocos caindo (alias: tetrix)'), P('sudo contratar', ';)'), P('history · clear · exit', ''), T('tab completa · ↑ histórico · esc fecha', 'muted'));
     } else if (lc === 'whoami') {
-      out.push(T('gabriel.r · Eng. de Computação · PUC-Rio · 2027.2', 'text-strong'), T('tcc     alocação preditiva de recursos em nuvem', 'text'), T('fase    PF I → PF II (dez/26–jun/27)', 'text'), T('busca   estágio em dados e IA', 'accent'));
+      out.push(T('gabriellsar · Eng. de Computação · PUC-Rio · 2027.2', 'text-strong'), T('tcc     alocação preditiva de recursos em nuvem', 'text'), T('fase    PF I → PF II (dez/26–jun/27)', 'text'), T('busca   estágio em dados e IA', 'accent'));
     } else if (lc === 'ls' || lc === 'ls projetos' || lc === 'ls -l') {
       const all = this.props.projects;
       out.push(T('total ' + all.length, 'muted'));
       all.forEach((p) => out.push(T(this.pad(p.code, 7) + this.pad(p.title, 32) + p.base, 'text')));
     } else if (lc === 'ls ferramentas' || lc === 'ls ~/stack') {
-      out.push(T('dados/      python · r · sql'), T('graficos/   c++ · opengl · glsl · godot'), T('web/        react · tailwind'), T('sistema/    linux · git · docker'), T('cloud/      aws'));
+      stack.forEach((d) => out.push(T(this.pad(d.dir + '/', 12) + d.items.filter((i) => !i.startsWith('[')).join(' · '))));
     } else if (a[0] === 'cd') {
       const id = SECTIONS[a[1] || '~'];
       if (id) { this.print(out); this.goTo(id); return; }
@@ -276,7 +277,7 @@ export default class Shell extends Component<Props, State> {
       else out.push(T('uso: tema claro|escuro', 'caution'));
     } else if (lc === 'neofetch') {
       const th = this.props.theme === 'dark' ? 'escuro' : 'claro';
-      out.push(T('gabriel@arch', 'accent'), T('------------', 'line-strong'), T('OS      Arch Linux'), T('WM      Hyprland'), T('Uni     PUC-Rio · Eng. de Computação'), T('Foco    ML aplicado · gráficos · produto'), T(`Tema    gabriel.r (${th})`), { kind: 'palette' });
+      out.push(T('gabriel@arch', 'accent'), T('------------', 'line-strong'), T('OS      Arch Linux'), T('WM      Hyprland'), T('Uni     PUC-Rio · Eng. de Computação'), T('Foco    ML aplicado · dados · nuvem'), T(`Tema    gabriellsar (${th})`), { kind: 'palette' });
     } else if (lc === 'cbonsai') {
       const seed = Math.floor(Math.random() * 99999);
       out.push({ kind: 'art', rows: this.bonsai(seed) }, T('cbonsai · seed ' + seed, 'muted'));

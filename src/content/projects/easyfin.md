@@ -1,8 +1,9 @@
 ---
-code: P/06
+code: P/05
 title: EasyFin
-desc: Finanças pessoais para quem está começando a investir.
-topics: [finanças pessoais, educação financeira, web]
-base: "[STACK]"
-order: 6
+desc: Gestor de carteira de investimentos com preço médio, marcação a mercado e rentabilidade comparada ao CDI e ao Ibovespa.
+topics: [renda variável, Clean Architecture, APIs de mercado]
+base: Django REST · PostgreSQL · Svelte 5
+order: 5
+repo: https://github.com/gabriellsar/easyfin
 ---

@@ -1,9 +1,10 @@
 export const stack: { dir: string; items: string[] }[] = [
-  { dir: 'dados', items: ['python', 'r', 'sql'] },
-  { dir: 'graficos', items: ['c++', 'opengl', 'glsl', 'godot'] },
-  { dir: 'web', items: ['react', 'tailwind'] },
+  { dir: 'ml', items: ['pytorch', 'scikit-learn', 'statsmodels'] },
+  { dir: 'dados', items: ['python', 'r', 'sql', 'pandas', 'duckdb'] },
+  { dir: 'ia', items: ['bedrock', 'rag', 'whisper'] },
+  { dir: 'cloud', items: ['aws', 'lambda', 'step-functions', 'glue', 'athena'] },
+  { dir: 'backend', items: ['fastapi', 'django-rest', 'postgresql', 'celery', 'redis'] },
   { dir: 'sistema', items: ['linux', 'git', 'docker'] },
-  { dir: 'cloud', items: ['aws', '[SERVIÇO]', '[SERVIÇO]', '[SERVIÇO]'] },
 ];
 
 export const sistema = 'arch · hyprland';
