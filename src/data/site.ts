@@ -11,7 +11,7 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/gabriellsar/',
   linkedinLabel: 'linkedin.com/in/gabriellsar',
   cv: '/cv.pdf',
-  boot: true,
+  boot: false,
 };
 
 export const mailto = site.email.startsWith('[') ? '#contato' : `mailto:${site.email}`;
