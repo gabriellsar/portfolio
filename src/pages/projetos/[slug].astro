@@ -49,7 +49,9 @@ const linkOf = (e?: typeof entry) => (e ? (e.data.caseStudy ? `/projetos/${e.id}
       {p.figura && (
         <figure style="position: relative; margin: 0; display: flex; flex-direction: column; gap: 12px">
           {p.figura.src
-            ? <img src={p.figura.src} alt={p.figura.alt} style="display: block; width: 100%; height: auto; border: 1px solid var(--line-strong)" />
+            ? p.figura.src.endsWith('.mp4')
+              ? <video src={p.figura.src} aria-label={p.figura.alt} autoplay muted loop playsinline preload="metadata" style="display: block; width: 100%; height: auto; border: 1px solid var(--line-strong)"></video>
+              : <img src={p.figura.src} alt={p.figura.alt} style="display: block; width: 100%; height: auto; border: 1px solid var(--line-strong)" />
             : (
               <div class="fig-grid" style="position: relative; aspect-ratio: 16 / 9; max-height: 520px; border: 1px solid var(--line-strong); background-color: var(--surface); display: flex; align-items: center; justify-content: center">
                 <span aria-hidden="true" class="gs-card-mark"></span>
