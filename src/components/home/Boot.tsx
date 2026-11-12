@@ -4,11 +4,11 @@ import { Progress } from '@/components/ui';
 const END = 70;
 const MSGS: [string, string, string][] = [
   ['GS-BOOT v0.3 · gabriellsar', '', 'muted'],
-  ['verificando memória ................', 'ok', 'accent'],
-  ['montando /portfolio ................', 'ok', 'accent'],
-  ['carregando tokens ..................', 'ok', 'accent'],
-  ['iniciando gabriellsar ..............', 'ok', 'accent'],
-  ['PUC-Rio · Eng. de Computação .......', '2027.2', 'text'],
+  ['verificando memória', 'ok', 'accent'],
+  ['montando /portfolio', 'ok', 'accent'],
+  ['carregando tokens', 'ok', 'accent'],
+  ['iniciando gabriellsar', 'ok', 'accent'],
+  ['PUC-Rio · Eng. de Computação', '2027.2', 'text'],
 ];
 
 export default function Boot({ location }: { location: string }) {
@@ -43,16 +43,20 @@ export default function Boot({ location }: { location: string }) {
         <span>GS-BOOT · TTY1</span><span>{location}</span>
       </div>
       <div className="boot-inner">
-        <div>
+        <div className="boot-lines">
           {MSGS.map((m, i) => t >= 2 + i * 4 && (
             <p key={i} className="boot-line">
-              <span style={{ color: 'var(--line-strong)' }}>[{(i * 0.117).toFixed(3).padStart(7, ' ')}]</span>  {m[0]}  <span style={{ color: `var(--${m[2]})` }}>{m[1]}</span>
+              <span className="boot-ts">[{(i * 0.117).toFixed(3).padStart(7, ' ')}]</span>
+              <span className="boot-label">{m[0]}</span>
+              {/* os pontos preenchem o que sobra da linha, então nada estoura no telefone */}
+              {m[1] && <span className="boot-dots" aria-hidden="true">{'.'.repeat(80)}</span>}
+              {m[1] && <span style={{ flex: 'none', color: `var(--${m[2]})` }}>{m[1]}</span>}
             </p>
           ))}
         </div>
         {t >= 27 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <p style={{ margin: 0, fontSize: 15 }}>
+            <p className="boot-prompt">
               <span style={{ color: 'var(--accent)' }}>gabriel@arch</span><span style={{ color: 'var(--muted)' }}>:~$</span> {cmd}
               <span style={{ display: 'inline-block', width: 8, height: 16, marginLeft: 2, verticalAlign: -2, background: 'var(--accent)', opacity: t >= 37 ? 0 : blink }} />
             </p>
@@ -62,9 +66,9 @@ export default function Boot({ location }: { location: string }) {
           </div>
         )}
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, maxWidth: 1100, width: '100%', margin: '0 auto' }}>
+      <div className="boot-foot">
         <div style={{ flex: '1 1 360px', maxWidth: 520 }}><Progress label="BOOT" value={pct} valueText={`${pct}%`} segments={24} /></div>
-        <button type="button" className="gs-btn gs-btn-ghost gs-btn-sm" onClick={skip}>Pular ⏎</button>
+        <button type="button" className="gs-btn gs-btn-ghost gs-btn-sm boot-skip" onClick={skip}>Pular<span className="boot-enter" aria-hidden="true"> ⏎</span></button>
       </div>
     </div>
   );

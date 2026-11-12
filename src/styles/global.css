@@ -150,9 +150,28 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
 /* ---------- boot ---------- */
 .boot { position: fixed; inset: 0; z-index: 1000; box-sizing: border-box; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; background: var(--bg); color: var(--text); font-family: var(--font-mono); transition: opacity 420ms cubic-bezier(0.2, 0, 0, 1); }
 .boot-inner { display: flex; flex-direction: column; gap: 28px; max-width: 1100px; width: 100%; margin: 0 auto; }
-.boot-line { margin: 0; font-size: 13px; line-height: 2; white-space: pre; color: var(--muted); }
+.boot-lines { max-width: 460px; }
+.boot-line { margin: 0; display: flex; gap: 12px; font-size: 13px; line-height: 2; white-space: pre; color: var(--muted); }
+.boot-ts { flex: none; color: var(--line-strong); }
+.boot-label { flex: none; }
+.boot-dots { flex: 1; min-width: 16px; overflow: hidden; }
+.boot-prompt { margin: 0; font-size: 15px; }
 .boot-name { margin: 0; font-size: 104px; line-height: 1; font-weight: 500; letter-spacing: -0.04em; color: var(--text-strong); }
+.boot-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; max-width: 1100px; width: 100%; margin: 0 auto; }
 @media (max-width: 760px) { .boot { padding: 24px; } .boot-name { font-size: 56px; } .boot-line { font-size: 11px; } }
+/* telefone: o log começa no topo e só cresce para baixo, sem pular; o nome sai do tamanho da capa */
+@media (max-width: 640px) {
+  .boot { justify-content: flex-start; gap: 40px; }
+  .boot-inner { flex: 1; gap: 32px; }
+  .boot-lines { max-width: none; }
+  .boot-line { font-size: 12px; gap: 10px; }
+  .boot-ts { display: none; }
+  .boot-prompt { font-size: 13px; }
+  .boot-name { font-size: min(72px, 12.8vw); line-height: 0.95; letter-spacing: -0.05em; }
+  .boot-foot { gap: 16px; }
+  .boot-skip { height: 44px; margin-left: auto; }
+  .boot-enter { display: none; }
+}
 
 /* ---------- rodapé ---------- */
 .foot-link { display: inline-flex; align-items: center; min-height: 32px; font-size: 15px; font-weight: 400; color: var(--text); text-decoration: none; }
