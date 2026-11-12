@@ -24,12 +24,16 @@ const all = await getProjects();
               {p.topics.map((t) => <Tag dot={false}>{t}</Tag>)}
             </div>
             <dl class="gs-card-meta"><dt>Tecnologia</dt><dd>{p.base}</dd></dl>
-            <div class="pf-cta" style="display: flex; flex-wrap: wrap; gap: 8px">
+            <div class="pf-cta">
               {p.caseStudy
-                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão detalhada →</a>
+                ? <a href={`/projetos/${id}`} class="gs-btn gs-btn-primary link-plain">Visão detalhada <span class="pf-cta-arrow" aria-hidden="true">→</span></a>
                 : <button type="button" class="gs-btn" disabled>Visão detalhada · em breve</button>}
-              {p.repo && <a href={p.repo} class="gs-btn gs-btn-ghost link-plain">Código ↗</a>}
-              {p.app && <a href={p.app} class="gs-btn gs-btn-ghost link-plain">App ↗</a>}
+              {(p.repo || p.app) && (
+                <div class="pf-cta-links">
+                  {p.repo && <a href={p.repo} class="gs-btn gs-btn-ghost link-plain">Código ↗</a>}
+                  {p.app && <a href={p.app} class="gs-btn gs-btn-ghost link-plain">App ↗</a>}
+                </div>
+              )}
             </div>
           </Card>
         </div>
