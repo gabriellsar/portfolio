@@ -9,6 +9,7 @@ export const site = {
   github: 'https://github.com/gabriellsar',
   githubLabel: 'github.com/gabriellsar',
   linkedin: 'https://www.linkedin.com/in/gabriellsar/',
+  linkedinLabel: 'linkedin.com/in/gabriellsar',
   cv: '/cv.pdf',
   boot: true,
 };
