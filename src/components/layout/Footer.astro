@@ -22,18 +22,25 @@ const year = now.getFullYear();
       </div>
     </div>
 
-    <nav aria-label="Rodapé" class="foot-col" style="flex: 0 1 180px">
+    <div class="foot-cols">
+    <nav aria-label="Rodapé" class="foot-col">
       <p class="mono-label">Navegação</p>
       <a class="foot-link" href={`${base}#projetos`}><span class="addr">0x01</span>Projetos</a>
       <a class="foot-link" href={`${base}#trajetoria`}><span class="addr">0x02</span>Trajetória</a>
       <a class="foot-link" href={`${base}#contato`}><span class="addr">0x03</span>Contato</a>
     </nav>
 
-    <div class="foot-col" style="flex: 0 1 220px">
+    <div class="foot-col">
       <p class="mono-label">Canais</p>
       <a class="foot-link" href={site.github} rel="me">GitHub ↗</a>
       <a class="foot-link" href={isHome ? mailto : mailto.startsWith('#') ? '/#contato' : mailto}>E-mail ↗</a>
       <a class="foot-link" href={isHome ? linkedinHref : linkedinHref.startsWith('#') ? '/#contato' : linkedinHref} rel="me">LinkedIn ↗</a>
+    </div>
+
+    <div class="foot-col">
+      <p class="mono-label">Currículo</p>
+      <a class="foot-link" href={site.cv} download aria-label="Baixar currículo (PDF)">Baixar PDF ↓</a>
+    </div>
     </div>
 
   </div>

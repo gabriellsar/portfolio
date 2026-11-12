@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Shell from './Shell';
 import type { ProjectLite } from '@/lib/projects';
+import { site } from '@/data/site';
 
 type Theme = 'dark' | 'light';
 
@@ -68,7 +69,6 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
     return () => window.removeEventListener('keydown', onKey);
   }, [sh]);
 
-  const dark = theme === 'dark';
   return (
     <nav className="tmux" aria-label="Principal">
       <div className="tmux-left">
@@ -91,10 +91,12 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
             </span>
           ))}
         </div>
-        <button type="button" className="tmux-tab tmux-theme" onClick={() => setTheme(dark ? 'light' : 'dark')} aria-label={dark ? 'Mudar para o tema claro' : 'Mudar para o tema escuro'}>
-          <span className="dot" aria-hidden="true" style={{ background: dark ? 'transparent' : 'var(--text-strong)' }} />
-          {dark ? 'tema: escuro' : 'tema: claro'}
-        </button>
+        <a href={site.cv} download className="tmux-tab tmux-cv" aria-label="Baixar currículo (PDF)">
+          <svg className="icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M2.5 13.5h11" />
+          </svg>
+          <span className="label">Currículo</span>
+        </a>
       </div>
       <Shell open={sh} onClose={() => setSh(false)} projects={projects} isHome={isHome} email={email} theme={theme} onTheme={setTheme} />
     </nav>

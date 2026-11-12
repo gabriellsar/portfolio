@@ -107,4 +107,4 @@ export const trajetoria: Etapa[] = [
   },
 ];
 
-export const trajetoriaAberta = 'frog';
+export const trajetoriaAberta = 'mjv';

@@ -32,6 +32,7 @@ a:hover { color: var(--text-strong); }
 @media (max-width: 640px) { .wrap { padding-left: 24px; padding-right: 24px; } }
 .mono-label { margin: 0; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .link-plain { text-decoration: none; }
+.hero-cv { display: none; }
 
 /* ---------- barra tmux ---------- */
 .tmux { position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch; min-height: 34px; border-bottom: 1px solid var(--line); background: var(--surface); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; }
@@ -44,8 +45,8 @@ a:hover { color: var(--text-strong); }
 .tmux-tab:focus-visible, .tmux-brand:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .tmux-status { display: flex; align-items: center; gap: 16px; padding: 0 14px; color: var(--muted); }
 .tmux-status .sep { color: var(--line-strong); }
-.tmux-theme { gap: 8px; border-left: 1px solid var(--line); color: var(--text); }
-.tmux-theme .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--text-strong); }
+.tmux-cv { gap: 8px; border-left: 1px solid var(--line); }
+.tmux-cv .icon { flex: none; }
 @media (max-width: 760px) { .tmux-status { display: none; } }
 
 /* ---------- capa ---------- */
@@ -184,6 +185,7 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
 /* ---------- rodapé ---------- */
 .foot-link { display: inline-flex; align-items: center; min-height: 32px; font-size: 15px; font-weight: 400; color: var(--text); text-decoration: none; }
 .foot-link .addr { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-right: 10px; }
+.foot-cols { display: flex; flex-wrap: nowrap; gap: 48px; }
 .foot-col { display: flex; flex-direction: column; gap: 4px; }
 .foot-col .mono-label { margin-bottom: 8px; }
 .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 4px; padding-bottom: 40px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); }
@@ -196,8 +198,7 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
   .tmux-left::-webkit-scrollbar { display: none; }
   .tmux-tab, .tmux-brand { white-space: nowrap; padding: 0 10px; }
   .tmux-end { flex: none; }
-  .tmux-theme { font-size: 0; gap: 0; }
-  .tmux-theme .dot { font-size: 12px; }
+  .tmux-cv .label { display: none; }
 }
 
 /* ---------- peças novas (desktop) ---------- */
@@ -233,6 +234,7 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
   .hero-hint, .hero-ls { display: none; }
   .hero-ctas .gs-btn { flex: 1 1 calc(50% - 6px); height: 48px; }
   .hero-ctas .gs-btn-primary { flex-basis: 100%; }
+  .hero-ctas .hero-cv { display: inline-flex; flex-basis: 100%; }
   .hero-scroll { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; }
   .hero-scroll .mono-label { font-size: 11px; white-space: nowrap; }
   .hero-scroll-track { position: relative; display: block; width: 1px; height: 32px; overflow: hidden; background: var(--line-strong); }
