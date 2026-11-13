@@ -94,10 +94,10 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
 .term-body { padding: 22px 24px 20px; display: flex; flex-direction: column; gap: 16px; }
 .seg { display: flex; flex-wrap: wrap; margin: 0; }
 .seg span { padding: 2px 10px; }
-.ls-row { display: grid; grid-template-columns: 120px 110px minmax(0, 1fr) 40px; gap: 16px; align-items: baseline; padding: 7px 8px; border-top: 1px solid var(--line); }
+.ls-row { display: grid; grid-template-columns: 120px 150px minmax(0, 1fr) 40px; gap: 16px; align-items: baseline; padding: 7px 8px; border-top: 1px solid var(--line); }
 .ls-row:last-child { border-bottom: 1px solid var(--line); }
 .ls-row:hover { background: var(--surface); }
-@media (max-width: 760px) { .ls-row { grid-template-columns: 96px minmax(0, 1fr) 28px; } .ls-perm { display: none; } }
+@media (max-width: 760px) { .ls-row { grid-template-columns: 150px minmax(0, 1fr) 28px; } .ls-perm { display: none; } }
 .palette { display: grid; grid-template-columns: repeat(8, 18px); grid-auto-rows: 10px; }
 
 /* ---------- trajetória ---------- */
