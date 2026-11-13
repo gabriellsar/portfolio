@@ -23,8 +23,7 @@ export const siteText: Record<Lang, { description: string; location: string; cv:
     description:
       'Computer Engineering student at PUC-Rio. I research and build applied machine learning solutions and take models from the notebook to production.',
     location: 'RIO DE JANEIRO, BRAZIL',
-    // Trocar para '/cv-en.pdf' quando houver currículo em inglês em public/
-    cv: site.cv,
+    cv: '/cv-en.pdf',
   },
 };
 
