@@ -1,0 +1,153 @@
+---
+title: Predictive cloud allocation
+desc: "Thesis: forecasting load with neural networks to allocate resources ahead of the peak and cut cost."
+topics: [time series, load forecasting, cloud]
+eyebrow: P/01 · THESIS · PUC-RIO
+lead: "How much does better load forecasting cut the cost of allocating cloud resources without increasing SLA violations? Neural networks versus classical methods, with the allocation policy held fixed to isolate the effect of the forecast."
+tags:
+  - { label: Final Project I, tone: accent }
+  - { label: Python · PyTorch }
+  - { label: Alibaba Cluster Trace }
+ficha:
+  - { k: Advisors, v: Adriano Branco · Jonatas Grosman }
+  - { k: Data, v: Alibaba Cluster Trace 2018 }
+  - { k: Forecasters, v: 5 classical + GRU }
+  - { k: Metrics, v: cost · SLA violations · idle capacity }
+  - { k: Stack, v: Python · PyTorch · statsmodels · DuckDB }
+  - { k: Period, v: Final Project I 2026.2 → II Jun 2027 }
+figura:
+  alt: Bar chart of the oracle-normalized cost on the test set for each forecaster and the baseline policies, at 1% and 5% violation limits
+  legenda: FIG.01 — COST TO MEET THE SLO (1.0 = ORACLE)
+  data: PRELIMINARY RESULTS
+---
+
+import Section from "@/components/study/Section.astro";
+import Tabs from "@/components/study/Tabs.astro";
+import TabPanel from "@/components/study/TabPanel.astro";
+import Learned from "@/components/study/Learned.astro";
+import { Card, Stat } from "@/components/ui";
+
+<Section address="0x01" title="The study">
+  <Tabs
+    items={[
+      { id: "problema", label: "The problem" },
+      { id: "metodo", label: "The method", count: 4 },
+      { id: "resultado", label: "The result" },
+    ]}
+  >
+    <TabPanel id="problema">
+      <div class="split">
+        <p class="statement">
+          Reactive allocation only adjusts after it sees demand change. At the
+          peaks, it arrives late.
+        </p>
+        <div class="split-side">
+          <p>
+            Every few minutes, a cloud provider decides how many instances to
+            keep running. Too many is expensive; too few breaks the service
+            level agreement (SLA).
+          </p>
+          <p>
+            The alternative is to forecast demand and provision ahead of time.
+            This work measures how much that forecast is worth in cost,
+            comparing neural networks with traditional methods under the same
+            allocation policy.
+          </p>
+        </div>
+      </div>
+    </TabPanel>
+    <TabPanel id="metodo">
+      <div class="auto-grid">
+        <Card id="M/01" title="Data" flat>
+          <p>
+            A real production trace from Alibaba (2018), aggregated into CPU
+            demand every 5 minutes and split chronologically (60/20/20) so the
+            future never leaks into training.
+          </p>
+        </Card>
+        <Card id="M/02" title="Forecasters" flat>
+          <p>
+            Naive, moving average, seasonal naive, Holt-Winters, ARIMA and a
+            PyTorch GRU that forecasts 5 to 30 minutes ahead in a single pass.
+          </p>
+        </Card>
+        <Card id="M/03" title="Fixed policy" flat>
+          <p>
+            A predictive policy with a safety margin calibrated on validation
+            for each violation limit. Only the forecaster changes, so any cost
+            difference comes from the forecast.
+          </p>
+        </Card>
+        <Card id="M/04" title="Simulator" flat>
+          <p>
+            Discrete-time simulation that models instance startup time. It
+            measures cost, SLA violations and idle capacity against reactive,
+            static and oracle baselines.
+          </p>
+        </Card>
+      </div>
+    </TabPanel>
+    <TabPanel id="resultado">
+      <div class="auto-grid">
+        <Stat
+          label="GRU · 1% limit"
+          value="1.29"
+          note="lowest cost that met the limit"
+        />
+        <Stat
+          label="Reactive (HPA) · 1%"
+          value="1.34"
+          note="and exceeded the limit on test"
+        />
+        <Stat
+          label="Static at peak"
+          value="1.83"
+          note="never violates, but pays for the slack"
+        />
+      </div>
+      <p class="max-prose">
+        Cost normalized by the oracle (1.00 = minimum cost with no violations).
+        With a 1% violation limit, the GRU had the lowest cost among the
+        configurations that met the limit on the test set. At 5%, the gaps
+        between forecasters shrink and ARIMA comes out slightly ahead (1.18).
+        The numbers come from a single test window and a single seed, and are
+        preliminary.
+      </p>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
+        <img
+          src="/projetos/alocacao-preditiva/politicas.png"
+          alt="Demand and allocated capacity on the test set for the oracle, static, reactive and predictive policies"
+          loading="lazy"
+          style="display: block; width: 100%; max-width: 900px; height: auto; border: 1px solid var(--line-strong)"
+        />
+        <figcaption class="mono-label" style="font-size: 11px">
+          FIG.02 — DEMAND (BLACK) AND CAPACITY (BLUE) UNDER EACH POLICY;
+          VIOLATIONS IN RED
+        </figcaption>
+      </figure>
+    </TabPanel>
+  </Tabs>
+</Section>
+
+<Section
+  address="0x02"
+  title="Next steps"
+  aside="FINAL PROJECT II · DEC 2026 – JUN 2027"
+>
+  <Learned
+    items={[
+      {
+        code: "N/01",
+        text: "Sensitivity analysis of the policy parameters and of instance startup time.",
+      },
+      {
+        code: "N/02",
+        text: "Multiple test windows and seeds, so the comparison between forecasters doesn't hinge on a single slice.",
+      },
+      {
+        code: "N/03",
+        text: "A second data center trace, to check whether the results hold outside Alibaba.",
+      },
+    ]}
+  />
+</Section>

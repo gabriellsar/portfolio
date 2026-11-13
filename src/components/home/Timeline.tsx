@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { DataBlock, Tag } from '@/components/ui';
 import type { Etapa } from '@/data/trajetoria';
+import { t, type Lang } from '@/i18n';
 
 /** Linha do tempo em acordeão: uma etapa aberta por vez. */
-export default function Timeline({ items, initial }: { items: Etapa[]; initial?: string }) {
+export default function Timeline({ items, initial, lang = 'pt' }: { items: Etapa[]; initial?: string; lang?: Lang }) {
+  const L = t(lang);
   const [open, setOpen] = useState<string | null>(initial ?? null);
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -26,10 +28,10 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                   className="gs-btn gs-btn-sm tl-toggle"
                   aria-expanded={isOpen}
                   aria-controls={panel}
-                  aria-label={`${isOpen ? 'Fechar' : 'Ver'} detalhes: ${it.org}`}
+                  aria-label={L.detailsAria(isOpen, it.org)}
                   onClick={() => setOpen(isOpen ? null : it.id)}
                 >
-                  <span className="tl-toggle-text">{isOpen ? 'Fechar −' : 'Detalhes +'}</span>
+                  <span className="tl-toggle-text">{isOpen ? L.close : L.details}</span>
                   {/* um + só: gira 45° e vira × quando abre */}
                   <svg className="tl-toggle-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path d="M9 3v12M3 9h12" />
@@ -44,7 +46,7 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                     <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{it.resumo}</p>
                     {it.feitos && it.feitos.length > 0 && (
                       <>
-                        <p className="mono-label">O que fiz</p>
+                        <p className="mono-label">{L.whatIDid}</p>
                         <ul className="bullets">{it.feitos.map((f, i) => <li key={i}>{f}</li>)}</ul>
                       </>
                     )}
@@ -61,7 +63,7 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                               <h4 style={{ margin: 0, fontSize: 18, lineHeight: 1.3, fontWeight: 400, color: 'var(--text-strong)' }}>{s.role}</h4>
                               <p className="mono-label" style={{ fontSize: 11 }}>{s.periodo}</p>
                             </div>
-                            <p className="mono-label">O que fiz</p>
+                            <p className="mono-label">{L.whatIDid}</p>
                             <ul className="bullets">{s.feitos.map((f, i) => <li key={i}>{f}</li>)}</ul>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                               {s.tags.map((t) => <Tag key={t} dot={false}>{t}</Tag>)}
@@ -73,9 +75,9 @@ export default function Timeline({ items, initial }: { items: Etapa[]; initial?:
                   </div>
                   <div className="tl-side">
                     <DataBlock rows={[
-                      { k: 'Área', v: it.area_in },
-                      { k: 'Período', v: it.periodo },
-                      { k: 'Projeto', v: it.projeto ? <a href={it.projeto.href}>{it.projeto.label}</a> : '—' },
+                      { k: L.area, v: it.area_in },
+                      { k: L.period, v: it.periodo },
+                      { k: L.project, v: it.projeto ? <a href={it.projeto.href}>{it.projeto.label}</a> : '—' },
                     ]} />
                   </div>
                 </div>

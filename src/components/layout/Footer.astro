@@ -1,10 +1,13 @@
 ---
 import { Heightmap, Tag } from '@/components/ui';
-import { site, mailto, linkedinHref } from '@/data/site';
+import { site, siteText, mailto, linkedinHref } from '@/data/site';
+import { homePath, t, type Lang } from '@/i18n';
 
-interface Props { isHome?: boolean }
-const { isHome = false } = Astro.props;
-const base = isHome ? '' : '/';
+interface Props { isHome?: boolean; lang?: Lang }
+const { isHome = false, lang = 'pt' } = Astro.props;
+const L = t(lang);
+const base = isHome ? '' : homePath(lang);
+const contato = `${homePath(lang)}#contato`;
 
 // Semente do relevo: o dia do ano do build. Cada deploy em um dia novo gera outro terreno.
 const now = new Date();
@@ -18,45 +21,45 @@ const year = now.getFullYear();
     <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 16px">
       <p style="margin: 0; font-family: var(--font-mono); font-size: 28px; font-weight: 500; color: var(--text-strong)">gabriellsar<span aria-hidden="true" style="display: inline-block; width: 15px; height: 26px; margin-left: 4px; vertical-align: -3px; background: var(--accent)"></span></p>
       <div style="display: flex; flex-wrap: wrap; gap: 8px">
-        <Tag>{site.location}</Tag>
+        <Tag>{siteText[lang].location}</Tag>
       </div>
     </div>
 
     <div class="foot-cols">
-    <nav aria-label="Rodapé" class="foot-col">
-      <p class="mono-label">Navegação</p>
-      <a class="foot-link" href={`${base}#projetos`}><span class="addr">0x01</span>Projetos</a>
-      <a class="foot-link" href={`${base}#trajetoria`}><span class="addr">0x02</span>Trajetória</a>
-      <a class="foot-link" href={`${base}#contato`}><span class="addr">0x03</span>Contato</a>
+    <nav aria-label={L.footerNav} class="foot-col">
+      <p class="mono-label">{L.navigation}</p>
+      <a class="foot-link" href={`${base}#projetos`}><span class="addr">0x01</span>{L.navProjects}</a>
+      <a class="foot-link" href={`${base}#trajetoria`}><span class="addr">0x02</span>{L.navJourney}</a>
+      <a class="foot-link" href={`${base}#contato`}><span class="addr">0x03</span>{L.navContact}</a>
     </nav>
 
     <div class="foot-col">
-      <p class="mono-label">Canais</p>
+      <p class="mono-label">{L.channels}</p>
       <a class="foot-link" href={site.github} rel="me">GitHub ↗</a>
-      <a class="foot-link" href={isHome ? mailto : mailto.startsWith('#') ? '/#contato' : mailto}>E-mail ↗</a>
-      <a class="foot-link" href={isHome ? linkedinHref : linkedinHref.startsWith('#') ? '/#contato' : linkedinHref} rel="me">LinkedIn ↗</a>
+      <a class="foot-link" href={isHome ? mailto : mailto.startsWith('#') ? contato : mailto}>E-mail ↗</a>
+      <a class="foot-link" href={isHome ? linkedinHref : linkedinHref.startsWith('#') ? contato : linkedinHref} rel="me">LinkedIn ↗</a>
     </div>
 
     <div class="foot-col">
-      <p class="mono-label">Currículo</p>
-      <a class="foot-link" href={site.cv} download aria-label="Baixar currículo (PDF)">Baixar PDF ↓</a>
+      <p class="mono-label">{L.cv}</p>
+      <a class="foot-link" href={siteText[lang].cv} download aria-label={L.cvAria}>{L.downloadPdf}</a>
     </div>
     </div>
 
   </div>
 
   <div class="foot-hm foot-hm-desk">
-    <Heightmap cols={cols} rows={rows} seed={seed} caption={false} marker={false} label="Faixa de terreno gerada por ruído" />
+    <Heightmap cols={cols} rows={rows} seed={seed} caption={false} marker={false} label={L.terrain} />
   </div>
 
   <div class="wrap foot-bottom">
-    <span>© {year} GABRIEL · GS/PORTFÓLIO</span>
+    <span>© {year} GABRIEL · {L.copyright}</span>
     <span class="foot-fig">FIG.00 — HEIGHTMAP · {cols}×{rows} · SEED 0x{seed.toString(16).toUpperCase()}</span>
-    <a href="#topo">↑ TOPO</a>
+    <a href="#topo">{L.top}</a>
   </div>
 
   <!-- No telefone o relevo fecha a página: de borda a borda, sem céu, depois do © -->
   <div class="foot-hm foot-hm-mob">
-    <Heightmap cols={mobCols} rows={mobRows} seed={seed} caption={false} marker={false} sky={false} label="Relevo gerado por ruído que fecha a página" />
+    <Heightmap cols={mobCols} rows={mobRows} seed={seed} caption={false} marker={false} sky={false} label={L.terrainMob} />
   </div>
 </footer>

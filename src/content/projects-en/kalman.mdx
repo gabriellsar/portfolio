@@ -1,0 +1,72 @@
+---
+desc: "Hackathon VX: reads Brazil's Official Gazette every day, matches each act against the company's obligations and turns the change into a task with a deadline and an owner."
+topics: [generative AI, agents, lakehouse, serverless]
+eyebrow: P/02 · HACKATHON VX · CHALLENGE 02
+lead: "A regulatory control tower: every day Kalman reads Brazil's Official Gazette (DOU), works out which acts change each company's obligations and proposes the change, which only takes effect once a person approves it."
+tags:
+  - { label: Team project, tone: accent }
+  - { label: AWS serverless }
+  - { label: Bedrock AgentCore }
+ficha:
+  - { k: Event, v: Hackathon VX · regulatory control tower }
+  - { k: Cloud, v: AWS · Lambda · Step Functions · API Gateway }
+  - { k: AI, v: Bedrock AgentCore · Guardrail · Knowledge Base }
+  - { k: Data, v: S3 · Glue · Athena · Iceberg/DuckDB }
+  - { k: Frontend, v: React 19 · Vite }
+  - { k: Period, v: Nov 2026 }
+figura:
+  alt: Kalman logo, several lines converging on a single orange point
+  legenda: FIG.02 — KALMAN
+---
+
+import Section from '@/components/study/Section.astro';
+import Tabs from '@/components/study/Tabs.astro';
+import TabPanel from '@/components/study/TabPanel.astro';
+import Learned from '@/components/study/Learned.astro';
+import { Card, Stat } from '@/components/ui';
+
+<Section address="0x01" title="The study">
+  <Tabs items={[{ id: 'problema', label: 'The problem' }, { id: 'fluxo', label: 'How it works', count: 4 }, { id: 'resultado', label: 'The result' }]}>
+    <TabPanel id="problema">
+      <div class="split">
+        <p class="statement">The Official Gazette publishes around 600 acts a day. Almost none of them matter to a given company, but the ones that do can't slip through.</p>
+        <div class="split-side">
+          <p>Existing tools filter by keyword: they tell you the word showed up, not that the obligation changed. Whoever follows the gazette ends up reading everything or missing what matters.</p>
+          <p>Both sides are expensive: keeping regulatory analysts dedicated to tracking the DOU, or getting fined for breaking a rule that changed.</p>
+        </div>
+      </div>
+    </TabPanel>
+    <TabPanel id="fluxo">
+      <div class="auto-grid">
+        <Card id="F/01" title="Daily read" flat><p>A scheduled ETL downloads the DOU, splits it into acts and writes them to the lakehouse (S3, Glue, Iceberg and DuckDB) in bronze, silver and gold layers.</p></Card>
+        <Card id="F/02" title="Per-company search" flat><p>Acts become chunks indexed with embeddings (Titan v2, S3 Vectors). For each of the company's active obligations, search retrieves the candidate acts.</p></Card>
+        <Card id="F/03" title="Triage and proposal" flat><p>A smaller model triages ("does this act change any obligation of this company?") and a larger one writes the proposal with the before, the after and the excerpt of the rule.</p></Card>
+        <Card id="F/04" title="Human decision" flat><p>The quoted excerpt is checked in code and must exist in the act. A person approves or rejects it; once approved, tasks are recalculated with a deadline and a responsible team.</p></Card>
+      </div>
+    </TabPanel>
+    <TabPanel id="resultado">
+      <div class="auto-grid">
+        <Stat label="Funnel for one week of the DOU" value="1,931 → 4" note="acts read → to decide" />
+        <Stat label="Alerts that week" value="9" note="vs. 224 from the keyword filter" />
+        <Stat label="Useless alerts" value="3" note="vs. 217 from the keyword filter" />
+      </div>
+      <p class="max-prose">In a real week of the DOU, 1,931 acts read became 13 relevant ones and 4 decisions. Finding one real obligation took reading 1.5 alerts, against 32 with the keyword filter. The difference comes from reading the whole act and comparing it with each of the company's obligations, instead of looking for words.</p>
+    </TabPanel>
+  </Tabs>
+</Section>
+
+<Section address="0x02" title="Why you can trust it">
+  <Learned items={[
+    { code: 'C/01', text: 'A person decides. The AI only proposes, and every version of an obligation keeps the act, the provision and the quoted excerpt.' },
+    { code: 'C/02', text: 'Auditable history. The matrix is rebuilt by replay and never overwrites versions; every AI step writes audit events.' },
+    { code: 'C/03', text: 'Per-company isolation and low cost. The user always comes from the Cognito token, and everything runs on managed services that only charge for what they execute.' },
+  ]} />
+</Section>
+
+<Section address="0x03" title="Next steps">
+  <Learned items={[
+    { code: 'N/01', text: 'Turn on email alerts: the template is built and tested, only the scheduling is missing.' },
+    { code: 'N/02', text: 'Recalibrate the company classification with more sign-ups.' },
+    { code: 'N/03', text: "Measure recall in the field, with real customers, which hasn't been done yet." },
+  ]} />
+</Section>

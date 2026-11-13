@@ -49,6 +49,14 @@ a:hover { color: var(--text-strong); }
 .tmux-cv .icon { flex: none; }
 @media (max-width: 760px) { .tmux-status { display: none; } }
 
+/* ---------- seletor de idioma (PT/EN) ---------- */
+.tmux-lang { gap: 6px; border-left: 1px solid var(--line); }
+.lang-switch .lang-opt { color: var(--muted); transition: color var(--dur-fast) var(--ease-out); }
+.lang-switch .lang-opt.is-on { color: var(--text-strong); }
+.lang-switch .lang-sep { color: var(--line-strong); }
+.lang-switch:hover .lang-opt:not(.is-on) { color: var(--accent); }
+.lang-mob { display: none; }
+
 /* ---------- capa ---------- */
 .hero { position: relative; min-height: calc(100vh - 35px); display: flex; flex-direction: column; overflow: hidden; border-bottom: 1px solid var(--line); }
 .hero-grid { position: absolute; inset: 0; opacity: 0.7; pointer-events: none; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%); mask-image: radial-gradient(ellipse at 70% 40%, #000 0%, transparent 70%); }
@@ -225,6 +233,9 @@ button.hero-key:hover, button.hero-key:focus-visible { border-color: var(--accen
   .gs-data dd { overflow-wrap: anywhere; }
   .study-title { font-size: min(56px, 13vw) !important; }
   .tmux { display: none; }
+  /* sem a barra, o seletor de idioma fica no canto de cima da página e rola junto com ela */
+  .lang-mob { position: absolute; top: 12px; right: 24px; z-index: 50; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1px solid var(--line-strong); background: var(--surface); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-decoration: none; }
+  .lang-mob:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
   /* capa */
   .hero { min-height: 100vh; min-height: 100svh; }

@@ -2,15 +2,22 @@
 import '@/styles/global.css';
 import TmuxBar from '@/components/home/TmuxBar';
 import Footer from '@/components/layout/Footer.astro';
-import { site } from '@/data/site';
+import LangSwitch from '@/components/layout/LangSwitch.astro';
+import { site, siteText } from '@/data/site';
 import { getProjects, lite } from '@/lib/projects';
+import { alternates, altPath, htmlLang, langOf, type Lang } from '@/i18n';
 
-interface Props { title?: string; description?: string; isHome?: boolean; active?: string }
-const { title = site.title, description = site.description, isHome = false, active = 'projetos' } = Astro.props;
-const projects = (await getProjects()).map(lite);
+interface Props { title?: string; description?: string; isHome?: boolean; active?: string; lang?: Lang }
+const lang: Lang = Astro.props.lang ?? langOf(Astro.url.pathname);
+const { title = site.title, description = siteText[lang].description, isHome = false, active = 'projetos' } = Astro.props;
+const projects = (await getProjects(lang)).map((p) => lite(p, lang));
+const is404 = Astro.url.pathname.replace(/\/$/, '').endsWith('/404');
+const alt = altPath(Astro.url.pathname);
+const hreflang = is404 ? null : alternates(Astro.url.pathname);
+const langHref = lang === 'pt' ? { pt: Astro.url.pathname, en: alt } : { pt: alt, en: Astro.url.pathname };
 ---
 <!doctype html>
-<html lang="pt-BR" data-theme="dark">
+<html lang={htmlLang[lang]} data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,9 +25,13 @@ const projects = (await getProjects()).map(lite);
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0c0d" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {hreflang && <link rel="alternate" hreflang="pt-BR" href={new URL(hreflang.pt, Astro.site)} />}
+    {hreflang && <link rel="alternate" hreflang="en" href={new URL(hreflang.en, Astro.site)} />}
+    {hreflang && <link rel="alternate" hreflang="x-default" href={new URL(hreflang.pt, Astro.site)} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'pt_BR'} />
     <script is:inline>
       (function () {
         var t;
@@ -31,8 +42,19 @@ const projects = (await getProjects()).map(lite);
     </script>
   </head>
   <body>
-    <TmuxBar client:load isHome={isHome} active={isHome ? 'topo' : active} projects={projects} status={[site.location]} email={site.email} />
+    <TmuxBar client:load lang={lang} langHref={langHref} isHome={isHome} active={isHome ? 'topo' : active} projects={projects} status={[siteText[lang].location]} email={site.email} />
+    <!-- no telefone a barra tmux some: o seletor de idioma fica no canto da página -->
+    <LangSwitch lang={lang} href={alt} class="lang-mob" />
     <slot />
-    <Footer isHome={isHome} />
+    <Footer isHome={isHome} lang={lang} />
+    <script>
+      // Troca de idioma mantém a seção em que a pessoa está (#projetos, #trajetoria…)
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[data-lang-switch]');
+        if (!a || !location.hash || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        location.href = a.getAttribute('href')!.split('#')[0] + location.hash;
+      });
+    </script>
   </body>
 </html>

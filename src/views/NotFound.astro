@@ -1,0 +1,21 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { homePath, projectsPath, t, type Lang } from '@/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const code = 'font-family: var(--font-mono); color: var(--accent)';
+---
+<Layout lang={lang} title={L.notFoundTitle} active="">
+  <main class="wrap" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding-top: 72px">
+    <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> cd {Astro.url.pathname}</p>
+    <p class="prompt" style="color: var(--signal)">cd: no such file or directory</p>
+    <h1 class="hero-name">404<span class="hero-cursor blink" aria-hidden="true"></span></h1>
+    <p style="margin: 0; max-width: 520px; font-size: 18px; line-height: 1.6">{L.notFound[0]}<span style={code}>:</span>{L.notFound[1]}<span style={code}>help</span>{L.notFound[2]}</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px">
+      <a href={homePath(lang)} class="gs-btn gs-btn-primary link-plain">cd ~</a>
+      <a href={projectsPath(lang)} class="gs-btn link-plain">{L.lsProjects}</a>
+    </div>
+  </main>
+</Layout>
