@@ -1,0 +1,11 @@
+---
+import { t, type Lang } from '@/i18n';
+interface Props { lang: Lang; href: string; class?: string }
+const { lang, href, class: cls } = Astro.props;
+const other: Lang = lang === 'pt' ? 'en' : 'pt';
+---
+<a href={href} hreflang={other === 'en' ? 'en' : 'pt-BR'} lang={other === 'en' ? 'en' : 'pt-BR'} class:list={['lang-switch', cls]} data-lang-switch aria-label={t(lang).langSwitch}>
+  <span class:list={['lang-opt', { 'is-on': lang === 'pt' }]} aria-hidden="true">PT</span>
+  <span class="lang-sep" aria-hidden="true">/</span>
+  <span class:list={['lang-opt', { 'is-on': lang === 'en' }]} aria-hidden="true">EN</span>
+</a>

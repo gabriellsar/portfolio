@@ -8,3 +8,8 @@ export const stack: { dir: string; items: string[] }[] = [
 ];
 
 export const sistema = 'arch · hyprland';
+
+/** Nomes de diretório em inglês (os itens são nomes de ferramenta e não mudam). */
+const dirEn: Record<string, string> = { linguagens: 'languages', dados: 'data' };
+export const stackEn = stack.map((d) => ({ ...d, dir: dirEn[d.dir] ?? d.dir }));
+export const stackFor = (lang: 'pt' | 'en') => (lang === 'en' ? stackEn : stack);

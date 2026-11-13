@@ -1,0 +1,7 @@
+---
+import Project from '@/views/Project.astro';
+import { caseStudyPaths } from '@/lib/projects';
+
+export function getStaticPaths() { return caseStudyPaths('en'); }
+---
+<Project {...Astro.props} />

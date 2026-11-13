@@ -1,0 +1,168 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Boot from '@/components/home/Boot';
+import Timeline from '@/components/home/Timeline';
+import { Card, DataBlock, SectionHeader, Tag, Palette } from '@/components/ui';
+import { site, siteText, mailto, linkedinHref } from '@/data/site';
+import { stackFor, sistema } from '@/data/stack';
+import { trajetoriaFor, trajetoriaAberta } from '@/data/trajetoria';
+import { getProjects, lite, splitFeatured } from '@/lib/projects';
+import { projectPath, projectsPath, t, type Lang } from '@/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const stack = stackFor(lang);
+const all = await getProjects(lang);
+const { featured, rest } = splitFeatured(all);
+const n2 = (n: number) => String(n).padStart(2, '0');
+const total = stack.reduce((s, d) => s + d.items.filter((i) => !i.startsWith('[')).length, 0);
+const canais = [
+  { k: 'GitHub', v: site.githubLabel },
+  { k: 'E-mail', v: site.email },
+  { k: 'LinkedIn', v: site.linkedinLabel },
+  { k: 'Local', v: 'Rio de Janeiro · UTC−3' },
+];
+---
+<Layout isHome lang={lang}>
+  {site.boot && <Boot client:load location={siteText[lang].location} />}
+
+  <div id="topo" class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> whoami</p>
+      <h1 class="hero-name">gabriellsar<span class="hero-cursor blink" aria-hidden="true"></span></h1>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 780px">
+        <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> {L.aboutCmd}</p>
+        <p style="margin: 0; font-size: clamp(20px, 2.4vw, 26px); line-height: 1.45; font-weight: 300">{siteText[lang].description}</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 12px">
+        <p class="prompt"><span class="user">gabriel@arch</span><span class="path">:~$</span> {L.contactCmd}</p>
+        <div class="hero-ctas" style="display: flex; flex-wrap: wrap; gap: 12px">
+          <a href={mailto} class="gs-btn gs-btn-primary link-plain">[ E-mail ]</a>
+          <a href={site.github} class="gs-btn link-plain" rel="me"> GitHub ↗ </a>
+          <a href={linkedinHref} class="gs-btn link-plain" rel="me"> LinkedIn ↗ </a>
+          <!-- só no telefone: lá a barra tmux (onde fica o botão do CV) some -->
+          <a href={siteText[lang].cv} download class="gs-btn link-plain hero-cv" aria-label={L.cvAria}>{L.cvBtn}</a>
+        </div>
+      </div>
+
+      <p class="hero-hint">{L.hint[0]}<button type="button" class="hero-key" data-open-shell aria-label={L.openShell}>:</button>{L.hint[1]}<kbd class="hero-key">Ctrl</kbd>+<kbd class="hero-key">K</kbd>{L.hint[2]}<span class="hero-hint-cmd">help</span>.</p>
+    </div>
+
+    <a href="#projetos" class="hero-scroll link-plain" aria-label={L.scrollTo}>
+      <span class="mono-label">{L.scrollLabel}</span>
+      <span class="hero-scroll-track" aria-hidden="true"><span></span></span>
+    </a>
+  </div>
+
+  <main class="wrap" style="padding-top: 88px; display: flex; flex-direction: column; gap: 88px">
+
+    <section id="projetos" style="display: flex; flex-direction: column; gap: 24px">
+      <SectionHeader address="0x01" title={L.featured} aside={L.topOf(n2(featured.length), n2(all.length))} />
+      <div class="pf-cards">
+        {featured.map(({ data: p, id }) => (
+          <Card id={p.code} title={p.title}>
+            {p.status && <Tag slot="aside" tone="caution">{L.status[p.status]}</Tag>}
+            <p>{p.desc}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              {p.topics.map((t) => <Tag dot={false}>{t}</Tag>)}
+            </div>
+            <dl class="gs-card-meta"><dt>{L.tech}</dt><dd>{p.base}</dd></dl>
+            <div class="pf-cta">
+              {p.caseStudy
+                ? <a href={projectPath(lang, id)} class="gs-btn gs-btn-primary link-plain">{L.caseStudy} <span class="pf-cta-arrow" aria-hidden="true">→</span></a>
+                : <button type="button" class="gs-btn" disabled>{L.caseSoon}</button>}
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div style="display: flex; flex-direction: column; margin-top: 24px; border-top: 1px solid var(--line-strong)">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 0 16px">
+          <p class="mono-label">{L.others}</p>
+          <a href={projectsPath(lang)} class="gs-btn gs-btn-sm link-plain">{L.seeAll(n2(all.length))}</a>
+        </div>
+        {rest.map((e) => {
+          const p = lite(e, lang);
+          return (
+            <a href={p.href} class="pf-row">
+              <span style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--muted)">{p.code}</span>
+              <span class="pf-main">
+                <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 16px; font-weight: 400; color: var(--text-strong)">{p.title}{p.status && <Tag tone="caution">{L.status[p.status]}</Tag>}</span>
+                <span class="pf-sub">{p.base}</span>
+              </span>
+              <span class="pf-hide" style="font-size: 14px; font-weight: 400; color: var(--muted)">{p.topics.join(' · ')}</span>
+              <span class="pf-hide" style="font-family: var(--font-mono); font-size: 12px; color: var(--text)">{p.base}</span>
+              <span class="pf-arrow" aria-hidden="true">→</span>
+            </a>
+          );
+        })}
+        <div style="border-top: 1px solid var(--line)"></div>
+      </div>
+    </section>
+
+    <section id="ferramentas" aria-label={L.toolsAria} style="display: flex; flex-direction: column; gap: 20px">
+      <div class="stack-head">
+        <p class="mono-label">{L.tools}</p>
+        <span class="stack-count">{L.areasItems(stack.length, total)}</span>
+      </div>
+      <div class="term">
+        <div class="term-bar">
+          <span><span style="color: var(--text-strong)">1:zsh</span>  <span style="color: var(--line-strong)">│</span>  ~/stack</span>
+          <span>pane 1/1 · 120×18</span>
+        </div>
+        <div class="term-body">
+          <p class="seg">
+            <span style="background: var(--accent); color: var(--on-accent); font-weight: 500">gabriel@arch</span>
+            <span style="background: var(--line-strong); color: var(--text-strong)">~/stack</span>
+            <span style="background: var(--surface); color: var(--muted)">git:main</span>
+            <span style="padding-left: 12px; color: var(--text-strong)">ls -l --group</span>
+          </p>
+          <p class="term-mprompt"><span style="color: var(--accent)">~/stack</span><span style="color: var(--muted)"> $</span> ls</p>
+          <div role="table" aria-label={L.toolsTable} style="display: flex; flex-direction: column">
+            <p class="term-total" style="margin: 0 0 6px; color: var(--muted)">total {stack.length}</p>
+            {stack.map((d) => {
+              const known = d.items.filter((i) => !i.startsWith('['));
+              const count = d.items.some((i) => i.startsWith('[')) ? '[n]' : String(known.length);
+              return (
+                <div role="row" class="ls-row">
+                  <span role="cell" class="ls-perm" style="color: var(--line-strong)">drwxr-xr-x</span>
+                  <span role="cell" style="color: var(--accent); font-weight: 500">{d.dir}/</span>
+                  <span role="cell" style="color: var(--text-strong)">
+                    {d.items.map((it, i) => (
+                      <>{i > 0 && <span style="color: var(--line-strong)">{d.dir === 'cloud' && i === 1 ? ' → ' : ' · '}</span>}{it}</>
+                    ))}
+                  </span>
+                  <span role="cell" style="text-align: right; color: var(--muted)">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+            <p class="term-stats" style="margin: 0; color: var(--muted)">{stack.length} {L.dirsTools[0]} · <span style="color: var(--text)">{total}+</span> {L.dirsTools[1]}</p>
+            <div style="display: flex; align-items: center; gap: 14px">
+              <Palette label={L.palette} />
+              <span class="term-sys" style="font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">{sistema}</span>
+            </div>
+          </div>
+          <p class="term-end" style="margin: 0; display: flex; align-items: center"><span style="color: var(--accent)">gabriel@arch</span><span style="color: var(--muted)">:~/stack$</span><span aria-hidden="true" style="display: inline-block; width: 8px; height: 16px; margin-left: 8px; background: var(--accent)"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="trajetoria" style="display: flex; flex-direction: column; gap: 40px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+        <SectionHeader address="0x02" title={L.journey} />
+      </div>
+      <Timeline client:visible lang={lang} items={trajetoriaFor(lang)} initial={trajetoriaAberta} />
+    </section>
+
+  </main>
+  <script>
+    document.querySelectorAll('[data-open-shell]').forEach((b) =>
+      b.addEventListener('click', () => window.dispatchEvent(new KeyboardEvent('keydown', { key: ':' }))));
+  </script>
+</Layout>

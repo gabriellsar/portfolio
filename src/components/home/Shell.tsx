@@ -5,7 +5,8 @@
 import { Component, createRef } from 'react';
 import { Palette } from '@/components/ui';
 import type { ProjectLite } from '@/lib/projects';
-import { stack } from '@/data/stack';
+import { stackFor } from '@/data/stack';
+import { homeHash, type Lang } from '@/i18n';
 
 type Theme = 'dark' | 'light';
 type Seg = { t: string; c: string };
@@ -20,6 +21,8 @@ type Game = 'snake' | 'blocos';
 type G = any;
 
 type Props = {
+  lang: Lang;
+  langHref: Record<Lang, string>;
   open: boolean;
   projects: ProjectLite[];
   isHome: boolean;
@@ -31,20 +34,121 @@ type Props = {
 type State = { out: Line[]; hist: string[]; hIdx: number; cmd: string; game: Game | null; g: G };
 
 const BS = '\\';
-const CHIPS = ['help', 'whoami', 'ls projetos', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'exit'];
-const COMPLETIONS = ['help', 'whoami', 'ls projetos', 'ls ferramentas', 'cd projetos', 'cd ferramentas', 'cd trajetoria', 'cd contato', 'open p/03', 'tema claro', 'tema escuro', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'sudo contratar', 'history', 'clear', 'exit', 'date'];
+const CHIPS: Record<Lang, string[]> = {
+  pt: ['help', 'whoami', 'ls projetos', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'exit'],
+  en: ['help', 'whoami', 'ls projects', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocks', 'exit'],
+};
+const COMPLETIONS: Record<Lang, string[]> = {
+  pt: ['help', 'whoami', 'ls projetos', 'ls ferramentas', 'cd projetos', 'cd ferramentas', 'cd trajetoria', 'cd contato', 'open p/03', 'tema claro', 'tema escuro', 'lang en', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocos', 'sudo contratar', 'history', 'clear', 'exit', 'date'],
+  en: ['help', 'whoami', 'ls projects', 'ls tools', 'cd projects', 'cd tools', 'cd experience', 'cd contact', 'open p/03', 'theme light', 'theme dark', 'lang pt', 'neofetch', 'cbonsai', 'sudo play snake', 'sudo play blocks', 'sudo hire-me', 'history', 'clear', 'exit', 'date'],
+};
 const PAD_KEYS = [
-  { label: '←', k: 'ArrowLeft', aria: 'Esquerda' }, { label: '↑', k: 'ArrowUp', aria: 'Cima ou girar' },
-  { label: '↓', k: 'ArrowDown', aria: 'Baixo' }, { label: '→', k: 'ArrowRight', aria: 'Direita' },
-  { label: 'r', k: 'r', aria: 'Reiniciar' }, { label: 'q', k: 'q', aria: 'Sair do jogo' },
+  { label: '←', k: 'ArrowLeft' }, { label: '↑', k: 'ArrowUp' }, { label: '↓', k: 'ArrowDown' },
+  { label: '→', k: 'ArrowRight' }, { label: 'r', k: 'r' }, { label: 'q', k: 'q' },
 ];
-const SECTIONS: Record<string, string> = { projetos: 'projetos', ferramentas: 'ferramentas', trajetoria: 'trajetoria', 'trajetória': 'trajetoria', contato: 'contato', '~': 'topo', home: 'topo' };
+const SECTIONS: Record<string, string> = {
+  projetos: 'projetos', ferramentas: 'ferramentas', trajetoria: 'trajetoria', 'trajetória': 'trajetoria', contato: 'contato', '~': 'topo', home: 'topo',
+  projects: 'projetos', tools: 'ferramentas', stack: 'ferramentas', experience: 'trajetoria', journey: 'trajetoria', contact: 'contato',
+};
+/** Comandos em inglês viram o comando canônico (em português), nos dois idiomas. */
+const ALIASES: Record<string, string> = {
+  'ls projects': 'ls projetos', 'ls tools': 'ls ferramentas', 'ls stack': 'ls ferramentas',
+  'sudo play blocks': 'sudo play blocos', 'sudo play tetrix': 'sudo play blocos', 'sudo play tetris': 'sudo play blocos',
+  'sudo hire-me': 'sudo contratar', 'sudo hire': 'sudo contratar', 'cd bonsai': 'cbonsai', bonsai: 'cbonsai', fastfetch: 'neofetch',
+};
+
+const M = {
+  pt: {
+    intro: 'gabriellsar shell · digite help e aperte enter · tab completa · esc fecha',
+    helpTitle: 'comandos',
+    help: [
+      ['whoami', 'quem sou eu'], ['ls projetos', 'todos os projetos'], ['ls ferramentas', 'stack principal'],
+      ['cd <seção>', 'projetos · ferramentas · trajetoria · contato'], ['open p/03', 'estudo de caso do WindAnalyzer'],
+      ['tema claro|escuro', 'troca o tema'], ['lang en', 'read in English'], ['neofetch', 'info do sistema'], ['cbonsai', 'planta uma árvore'],
+      ['sudo play snake', 'cobrinha'], ['sudo play blocos', 'blocos caindo (alias: tetrix)'], ['sudo contratar', ';)'], ['history · clear · exit', ''],
+    ],
+    helpFoot: 'tab completa · ↑ histórico · esc fecha',
+    whoami: ['gabriellsar · Eng. de Computação · PUC-Rio · 2027.2', 'tcc     alocação preditiva de recursos em nuvem', 'fase    PF I → PF II (dez/26–jun/27)', 'busca   estágio em dados e IA'],
+    cdErr: 'cd: diretório não encontrado: ',
+    open: 'abrir',
+    noCase: ' ainda não tem visão detalhada',
+    themeUsage: 'uso: tema claro|escuro',
+    themeTo: 'tema → ',
+    langUsage: 'uso: lang pt|en',
+    langSame: 'você já está em português',
+    langTo: 'idioma → ',
+    neo: ['Uni     PUC-Rio · Eng. de Computação', 'Foco    ML aplicado · dados · nuvem'],
+    themeLine: 'Tema    ',
+    themeName: { dark: 'escuro', light: 'claro' },
+    denied: 'permissão negada. tente: sudo ',
+    sudoPw: '[sudo] senha para gabriel: ••••••••',
+    granted: 'acesso concedido.',
+    openMail: '→ abrir e-mail',
+    sudoers: 'gabriel não está no arquivo sudoers. este incidente será reportado.',
+    locale: 'pt-BR',
+    rm: 'boa tentativa.',
+    editor: 'nenhum editor por aqui. e não, você não vai ficar preso.',
+    notFound: '  · tente help',
+    score: 'pontos',
+    snakeHint: 'setas ou WASD movem · q sai',
+    blocksHint: '← → movem · ↑ gira · ↓ desce · espaço solta · q sai',
+    over: 'fim de jogo · r reinicia · q sai',
+    playing: (g: string) => `jogando ${g} · q sai`,
+    dialog: 'Terminal do portfólio',
+    bonsai: 'Bonsai em ASCII',
+    pad: ['Esquerda', 'Cima ou girar', 'Baixo', 'Direita', 'Reiniciar', 'Sair do jogo'],
+    games: { snake: 'snake', blocos: 'blocos' },
+  },
+  en: {
+    intro: 'gabriellsar shell · type help and press enter · tab completes · esc closes',
+    helpTitle: 'commands',
+    help: [
+      ['whoami', 'who I am'], ['ls projects', 'all projects'], ['ls tools', 'main stack'],
+      ['cd <section>', 'projects · tools · experience · contact'], ['open p/03', 'WindAnalyzer case study'],
+      ['theme light|dark', 'switch the theme'], ['lang pt', 'ler em português'], ['neofetch', 'system info'], ['cbonsai', 'grow a tree'],
+      ['sudo play snake', 'snake'], ['sudo play blocks', 'falling blocks (alias: tetris)'], ['sudo hire-me', ';)'], ['history · clear · exit', ''],
+    ],
+    helpFoot: 'tab completes · ↑ history · esc closes',
+    whoami: ['gabriellsar · Computer Engineering · PUC-Rio · 2027.2', 'thesis  predictive cloud resource allocation', 'phase   Final Project I → II (Dec 2026–Jun 2027)', 'seeking data & AI internship'],
+    cdErr: 'cd: no such directory: ',
+    open: 'open',
+    noCase: ' has no case study yet',
+    themeUsage: 'usage: theme light|dark',
+    themeTo: 'theme → ',
+    langUsage: 'usage: lang pt|en',
+    langSame: "you're already reading in English",
+    langTo: 'language → ',
+    neo: ['Uni     PUC-Rio · Computer Engineering', 'Focus   applied ML · data · cloud'],
+    themeLine: 'Theme   ',
+    themeName: { dark: 'dark', light: 'light' },
+    denied: 'permission denied. try: sudo ',
+    sudoPw: '[sudo] password for gabriel: ••••••••',
+    granted: 'access granted.',
+    openMail: '→ open e-mail',
+    sudoers: 'gabriel is not in the sudoers file. this incident will be reported.',
+    locale: 'en-US',
+    rm: 'nice try.',
+    editor: "no editors around here. and no, you won't get stuck.",
+    notFound: '  · try help',
+    score: 'score',
+    snakeHint: 'arrows or WASD move · q quits',
+    blocksHint: '← → move · ↑ rotates · ↓ drops one · space drops · q quits',
+    over: 'game over · r restarts · q quits',
+    playing: (g: string) => `playing ${g} · q quits`,
+    dialog: 'Portfolio terminal',
+    bonsai: 'ASCII bonsai',
+    pad: ['Left', 'Up or rotate', 'Down', 'Right', 'Restart', 'Quit game'],
+    games: { snake: 'snake', blocos: 'blocks' },
+  },
+};
 
 export default class Shell extends Component<Props, State> {
   state: State = { out: [], hist: [], hIdx: -1, cmd: '', game: null, g: null };
   input = createRef<HTMLInputElement>();
   outEl = createRef<HTMLDivElement>();
   timer: ReturnType<typeof setInterval> | undefined;
+
+  get m() { return M[this.props.lang] ?? M.pt; }
 
   componentDidMount() { if (this.props.open) this.onOpen(); }
   componentWillUnmount() { clearInterval(this.timer); }
@@ -54,7 +158,7 @@ export default class Shell extends Component<Props, State> {
     if (this.outEl.current && (ps.out !== this.state.out || ps.g !== this.state.g)) this.outEl.current.scrollTop = this.outEl.current.scrollHeight;
   }
   onOpen() {
-    if (!this.state.out.length) this.setState({ out: [this.T('gabriellsar shell · digite help e aperte enter · tab completa · esc fecha', 'muted')] });
+    if (!this.state.out.length) this.setState({ out: [this.T(this.m.intro, 'muted')] });
     requestAnimationFrame(() => this.input.current?.focus());
   }
   stopGame() { clearInterval(this.timer); if (this.state.game) this.setState({ game: null, g: null }); }
@@ -183,7 +287,7 @@ export default class Shell extends Component<Props, State> {
     if (k === 'q' || k === 'Q' || k === 'Escape') {
       clearInterval(this.timer);
       this.setState({ game: null, g: null });
-      this.print([this.T(`${kind} · pontos ${g.score}`, 'muted')]);
+      this.print([this.T(`${this.m.games[kind]} · ${this.m.score} ${g.score}`, 'muted')]);
     } else if ((k === 'r' || k === 'R') && g.over) {
       this.startGame(kind);
     } else if (g.over) {
@@ -217,7 +321,7 @@ export default class Shell extends Component<Props, State> {
   complete(cur: string) {
     const c = String(cur || '').toLowerCase();
     if (!c) return;
-    const m = COMPLETIONS.filter((x) => x.indexOf(c) === 0);
+    const m = COMPLETIONS[this.props.lang].filter((x) => x.indexOf(c) === 0);
     if (!m.length) return;
     if (m.length === 1) { this.setState({ cmd: m[0] }); return; }
     let p = m[0];
@@ -231,7 +335,7 @@ export default class Shell extends Component<Props, State> {
     if (this.props.isHome) {
       setTimeout(() => document.getElementById(id)?.scrollIntoView({ block: 'start' }), 30);
     } else {
-      window.location.href = id === 'topo' ? '/' : `/#${id}`;
+      window.location.href = homeHash(this.props.lang, id);
     }
   }
 
@@ -241,9 +345,10 @@ export default class Shell extends Component<Props, State> {
     let lc = cmd.toLowerCase().split(' ').filter(Boolean).join(' ');
     const hist = cmd ? this.state.hist.concat([cmd]).slice(-50) : this.state.hist;
     this.setState({ cmd: '', hIdx: -1, hist });
-    if (lc === 'cd bonsai' || lc === 'bonsai') lc = 'cbonsai';
-    if (lc === 'sudo play tetrix' || lc === 'sudo play tetris') lc = 'sudo play blocos';
-    if (lc === 'fastfetch') lc = 'neofetch';
+    const M = this.m;
+    if (ALIASES[lc]) lc = ALIASES[lc];
+    if (lc.startsWith('theme ')) lc = 'tema ' + lc.slice(6);
+    if (lc.startsWith('idioma ') || lc === 'idioma') lc = 'lang' + lc.slice(6);
     const a = lc.split(' ');
     const out: Line[] = [{ kind: 'prompt', text: cmd }];
     const mail = this.props.email.startsWith('[') ? '#contato' : `mailto:${this.props.email}`;
@@ -253,31 +358,41 @@ export default class Shell extends Component<Props, State> {
 
     if (lc === 'help') {
       const P = (c: string, d: string) => T('  ' + this.pad(c, 22) + d, 'text');
-      out.push(T('comandos', 'muted'), P('whoami', 'quem sou eu'), P('ls projetos', 'todos os projetos'), P('ls ferramentas', 'stack principal'), P('cd <seção>', 'projetos · ferramentas · trajetoria · contato'), P('open p/03', 'estudo de caso do WindAnalyzer'), P('tema claro|escuro', 'troca o tema'), P('neofetch', 'info do sistema'), P('cbonsai', 'planta uma árvore'), P('sudo play snake', 'cobrinha'), P('sudo play blocos', 'blocos caindo (alias: tetrix)'), P('sudo contratar', ';)'), P('history · clear · exit', ''), T('tab completa · ↑ histórico · esc fecha', 'muted'));
+      out.push(T(M.helpTitle, 'muted'), ...M.help.map(([c, d]) => P(c, d)), T(M.helpFoot, 'muted'));
     } else if (lc === 'whoami') {
-      out.push(T('gabriellsar · Eng. de Computação · PUC-Rio · 2027.2', 'text-strong'), T('tcc     alocação preditiva de recursos em nuvem', 'text'), T('fase    PF I → PF II (dez/26–jun/27)', 'text'), T('busca   estágio em dados e IA', 'accent'));
+      out.push(T(M.whoami[0], 'text-strong'), T(M.whoami[1], 'text'), T(M.whoami[2], 'text'), T(M.whoami[3], 'accent'));
     } else if (lc === 'ls' || lc === 'ls projetos' || lc === 'ls -l') {
       const all = this.props.projects;
       out.push(T('total ' + all.length, 'muted'));
       all.forEach((p) => out.push(T(this.pad(p.code, 7) + this.pad(p.title, 32) + p.base, 'text')));
     } else if (lc === 'ls ferramentas' || lc === 'ls ~/stack') {
-      stack.forEach((d) => out.push(T(this.pad(d.dir + '/', 12) + d.items.filter((i) => !i.startsWith('[')).join(' · '))));
+      stackFor(this.props.lang).forEach((d) => out.push(T(this.pad(d.dir + '/', 12) + d.items.filter((i) => !i.startsWith('[')).join(' · '))));
     } else if (a[0] === 'cd') {
       const id = SECTIONS[a[1] || '~'];
       if (id) { this.print(out); this.goTo(id); return; }
-      out.push(T('cd: diretório não encontrado: ' + a[1], 'signal'));
+      out.push(T(M.cdErr + a[1], 'signal'));
     } else if (a[0] === 'open') {
       const q = (a[1] || '').toLowerCase();
       const p = this.props.projects.find((x) => x.code.toLowerCase() === q || x.title.toLowerCase() === q);
-      if (p && p.caseStudy) out.push({ kind: 'link', text: `→ abrir ${p.code} · ${p.title}`, href: p.href });
-      else out.push(T((q || '?').toUpperCase() + ' ainda não tem visão detalhada', 'muted'));
+      if (p && p.caseStudy) out.push({ kind: 'link', text: `→ ${M.open} ${p.code} · ${p.title}`, href: p.href });
+      else out.push(T((q || '?').toUpperCase() + M.noCase, 'muted'));
     } else if (a[0] === 'tema') {
       const nt: Theme | null = (a[1] === 'claro' || a[1] === 'light') ? 'light' : ((a[1] === 'escuro' || a[1] === 'dark') ? 'dark' : null);
-      if (nt) { this.props.onTheme(nt); out.push(T('tema → ' + a[1], 'muted')); }
-      else out.push(T('uso: tema claro|escuro', 'caution'));
+      if (nt) { this.props.onTheme(nt); out.push(T(M.themeTo + a[1], 'muted')); }
+      else out.push(T(M.themeUsage, 'caution'));
+    } else if (a[0] === 'lang') {
+      const to: Lang | null = ['en', 'english', 'inglês', 'ingles'].includes(a[1]) ? 'en' : ['pt', 'pt-br', 'português', 'portugues', 'portuguese'].includes(a[1]) ? 'pt' : null;
+      if (!to) out.push(T(M.langUsage, 'caution'));
+      else if (to === this.props.lang) out.push(T(M.langSame, 'muted'));
+      else {
+        out.push(T(M.langTo + to, 'muted'));
+        this.print(out);
+        window.location.href = this.props.langHref[to] + (this.props.isHome ? window.location.hash : '');
+        return;
+      }
     } else if (lc === 'neofetch') {
-      const th = this.props.theme === 'dark' ? 'escuro' : 'claro';
-      out.push(T('gabriel@arch', 'accent'), T('------------', 'line-strong'), T('OS      Arch Linux'), T('WM      Hyprland'), T('Uni     PUC-Rio · Eng. de Computação'), T('Foco    ML aplicado · dados · nuvem'), T(`Tema    gabriellsar (${th})`), { kind: 'palette' });
+      const th = M.themeName[this.props.theme];
+      out.push(T('gabriel@arch', 'accent'), T('------------', 'line-strong'), T('OS      Arch Linux'), T('WM      Hyprland'), T(M.neo[0]), T(M.neo[1]), T(`${M.themeLine}gabriellsar (${th})`), { kind: 'palette' });
     } else if (lc === 'cbonsai') {
       const seed = Math.floor(Math.random() * 99999);
       out.push({ kind: 'art', rows: this.bonsai(seed) }, T('cbonsai · seed ' + seed, 'muted'));
@@ -286,23 +401,23 @@ export default class Shell extends Component<Props, State> {
       this.startGame(lc === 'sudo play snake' ? 'snake' : 'blocos');
       return;
     } else if (a[0] === 'play') {
-      out.push(T('permissão negada. tente: sudo ' + lc, 'signal'));
+      out.push(T(M.denied + lc, 'signal'));
     } else if (lc === 'sudo contratar' || lc === 'sudo hire-me') {
-      out.push(T('[sudo] senha para gabriel: ••••••••', 'muted'), T('acesso concedido.', 'accent'), { kind: 'link', text: '→ abrir e-mail', href: mail });
+      out.push(T(M.sudoPw, 'muted'), T(M.granted, 'accent'), { kind: 'link', text: M.openMail, href: mail });
     } else if (a[0] === 'sudo') {
-      out.push(T('gabriel não está no arquivo sudoers. este incidente será reportado.', 'caution'));
+      out.push(T(M.sudoers, 'caution'));
     } else if (lc === 'history') {
       hist.forEach((h, i) => out.push(T(String(i + 1).padStart(4, ' ') + '  ' + h)));
     } else if (a[0] === 'echo') {
       out.push(T(cmd.slice(5)));
     } else if (lc === 'date') {
-      out.push(T(new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })));
+      out.push(T(new Date().toLocaleString(M.locale, { timeZone: 'America/Sao_Paulo' })));
     } else if (a[0] === 'rm') {
-      out.push(T('boa tentativa.', 'signal'));
+      out.push(T(M.rm, 'signal'));
     } else if (['vim', 'nvim', 'vi', 'emacs', 'nano'].includes(a[0])) {
-      out.push(T('nenhum editor por aqui. e não, você não vai ficar preso.', 'muted'));
+      out.push(T(M.editor, 'muted'));
     } else {
-      out.push(T('zsh: command not found: ' + a[0] + '  · tente help', 'signal'));
+      out.push(T('zsh: command not found: ' + a[0] + M.notFound, 'signal'));
     }
     this.print(out);
   }
@@ -339,9 +454,11 @@ export default class Shell extends Component<Props, State> {
   render() {
     const { open } = this.props;
     const { out, game, g, cmd } = this.state;
+    const M = this.m;
+    const gname = game ? M.games[game] : '';
     const prompt = <><span style={{ color: 'var(--accent)' }}>gabriel@arch</span><span style={{ color: 'var(--muted)' }}>:~$</span></>;
     return (
-      <div id="gs-shell" className="sh" role="dialog" aria-label="Terminal do portfólio" hidden={!open} onClick={() => this.input.current?.focus()}>
+      <div id="gs-shell" className="sh" role="dialog" aria-label={M.dialog} hidden={!open} onClick={() => this.input.current?.focus()}>
         <div className="sh-out" ref={this.outEl} aria-live="polite">
           {out.map((o, i) => {
             if (o.kind === 'prompt') return <p key={i}>{prompt} <span style={{ color: 'var(--text-strong)' }}>{o.text}</span></p>;
@@ -349,7 +466,7 @@ export default class Shell extends Component<Props, State> {
             if (o.kind === 'link') return <a key={i} href={o.href} style={{ alignSelf: 'flex-start', color: 'var(--accent)', textDecoration: 'none' }}>{o.text}</a>;
             if (o.kind === 'palette') return <div key={i} style={{ margin: '6px 0' }}><Palette /></div>;
             return (
-              <pre key={i} className="sh-art" aria-label="Bonsai em ASCII">
+              <pre key={i} className="sh-art" aria-label={M.bonsai}>
                 {o.rows.map((rw, j) => <span key={j} style={{ display: 'block' }}>{rw.segs.map((sg, k) => <span key={k} style={{ color: sg.c }}>{sg.t}</span>)}</span>)}
               </pre>
             );
@@ -357,16 +474,16 @@ export default class Shell extends Component<Props, State> {
           {game && g && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '8px 0' }}>
               <p style={{ color: 'var(--text-strong)' }}>
-                {game} · pontos {g.score}{' '}
-                <span style={{ color: 'var(--muted)' }}>· {game === 'snake' ? 'setas ou WASD movem · q sai' : '← → movem · ↑ gira · ↓ desce · espaço solta · q sai'}</span>
+                {gname} · {M.score} {g.score}{' '}
+                <span style={{ color: 'var(--muted)' }}>· {game === 'snake' ? M.snakeHint : M.blocksHint}</span>
               </p>
-              <div className="game-grid" role="img" aria-label={`${game} · pontos ${g.score}`} style={{ gridTemplateColumns: `repeat(${g.W}, 14px)` }}>
+              <div className="game-grid" role="img" aria-label={`${gname} · ${M.score} ${g.score}`} style={{ gridTemplateColumns: `repeat(${g.W}, 14px)` }}>
                 {this.cells().map((c, i) => <span key={i} style={{ background: c }} />)}
               </div>
-              {g.over && <p style={{ color: 'var(--signal)' }}>fim de jogo · r reinicia · q sai</p>}
+              {g.over && <p style={{ color: 'var(--signal)' }}>{M.over}</p>}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {PAD_KEYS.map((p) => (
-                  <button key={p.k} type="button" className="gs-btn gs-btn-sm" aria-label={p.aria} style={{ minWidth: 44 }}
+                {PAD_KEYS.map((p, i) => (
+                  <button key={p.k} type="button" className="gs-btn gs-btn-sm" aria-label={M.pad[i]} style={{ minWidth: 44 }}
                     onClick={() => { this.gameKey({ key: p.k }); this.input.current?.focus(); }}>{p.label}</button>
                 ))}
               </div>
@@ -374,7 +491,7 @@ export default class Shell extends Component<Props, State> {
           )}
         </div>
         <div className="sh-chips">
-          {CHIPS.map((c) => (
+          {CHIPS[this.props.lang].map((c) => (
             <button key={c} type="button" className="gs-btn gs-btn-sm gs-btn-ghost" onClick={() => { this.exec(c); this.input.current?.focus(); }}>{c}</button>
           ))}
         </div>
@@ -388,7 +505,7 @@ export default class Shell extends Component<Props, State> {
             onKeyDown={this.onKey}
             autoComplete="off"
             spellCheck={false}
-            placeholder={game ? `jogando ${game} · q sai` : 'help'}
+            placeholder={game ? M.playing(gname) : 'help'}
           />
         </div>
       </div>

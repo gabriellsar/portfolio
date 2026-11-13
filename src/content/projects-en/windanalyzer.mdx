@@ -1,0 +1,78 @@
+---
+desc: App for modeling wind data without assuming a distribution, combining MERRA-2 with INMET weather stations.
+topics: [non-parametric statistics, climate data, Monte Carlo]
+eyebrow: P/03 · RESEARCH · FROG LAB
+lead: "Non-parametric modeling of wind data in a Shiny app: MERRA-2 reanalysis corrected with INMET stations, then clustered, estimated and simulated."
+tags:
+  - { label: Undergraduate research paper, tone: accent }
+  - { label: INPI registration, tone: accent }
+  - { label: R · Shiny }
+  - { label: Industrial Engineering Dept. }
+ficha:
+  - { k: Lab, v: FROG · PUC-Rio }
+  - { k: Data, v: MERRA-2 + INMET }
+  - { k: Methods, v: K-means · KDE · Monte Carlo }
+  - { k: Stack, v: R · Shiny }
+  - { k: Output, v: app + technical paper }
+  - { k: Registration, v: INPI BR512026006513-5 }
+  - { k: Period, v: Mar 2025 – Mar 2026 }
+figura:
+  alt: WindAnalyzer home page, with the button to start an analysis and the tool's three modules
+  legenda: FIG.03 — WINDANALYZER HOME PAGE
+---
+
+import Section from '@/components/study/Section.astro';
+import Tabs from '@/components/study/Tabs.astro';
+import TabPanel from '@/components/study/TabPanel.astro';
+import Learned from '@/components/study/Learned.astro';
+import { Card, Stat } from '@/components/ui';
+
+<Section address="0x01" title="The study">
+  <Tabs items={[{ id: 'problema', label: 'The problem' }, { id: 'metodos', label: 'The methods', count: 4 }, { id: 'resultado', label: 'The result' }]}>
+    <TabPanel id="problema">
+      <div class="split">
+        <p class="statement">The manufacturer's power curve describes a single turbine under ideal conditions. A real wind farm doesn't behave like that.</p>
+        <div class="split-side">
+          <p>Projecting generation runs into two obstacles: long on-site wind series are rarely available, and converting wind into power is uncertain. Within the same speed range, power varies by hundreds of kilowatts.</p>
+          <p>The non-parametric methods that handle this uncertainty are more accurate, but hard to implement. WindAnalyzer turns two published methodologies into an interactive decision-support tool.</p>
+        </div>
+      </div>
+    </TabPanel>
+    <TabPanel id="metodos">
+      <div class="auto-grid">
+        <Card id="M/01" title="Wind series" flat><p>MERRA-2 reanalysis for any point in Brazil, extrapolated to hub height and corrected by the ratio between the means of the series and of an INMET station.</p></Card>
+        <Card id="M/02" title="K-means" flat><p>Splits the series into wind regimes. The number of clusters is picked automatically, testing K from 1 to 30 with the elbow method.</p></Card>
+        <Card id="M/03" title="KDE" flat><p>Estimates the power distribution in each regime straight from the data, with a Gaussian kernel, without imposing a distribution family.</p></Card>
+        <Card id="M/04" title="Monte Carlo" flat><p>Assigns each projected speed to its regime and samples power from the estimated densities, generating generation scenarios.</p></Card>
+      </div>
+    </TabPanel>
+    <TabPanel id="resultado">
+      <div class="auto-grid">
+        <Stat label="Confidence band" value="90%" note="5th and 95th percentiles of the scenarios" />
+        <Stat label="Clusters in the demo" value="9" note="chosen with the elbow method" />
+        <Stat label="Stratification strategies" value="4" note="single · monthly · hourly · month-hour" />
+      </div>
+      <p class="max-prose">In the demo case, with hourly series from 2013 and 2014 and wind projections for 2025, the estimated generation reproduced the central tendency and spread of the historical series. The estimated densities came out unimodal, bimodal and skewed, which no single distribution family could reproduce at once.</p>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
+        <img src="/projetos/windanalyzer/kde.png" alt="Power density curves estimated by KDE for each cluster" loading="lazy" style="display: block; width: 100%; max-width: 900px; height: auto; border: 1px solid var(--line-strong)" />
+        <figcaption class="mono-label" style="font-size: 11px">FIG.03B — POWER DENSITIES ESTIMATED PER CLUSTER</figcaption>
+      </figure>
+    </TabPanel>
+  </Tabs>
+</Section>
+
+<Section address="0x02" title="Engineering">
+  <Learned items={[
+    { code: 'E/01', text: 'The MERRA-2 grid for all of Brazil is split into one Feather file per grid point, in the cloud. Each query downloads only the requested point, with OAuth 2.0 authentication.' },
+    { code: 'E/02', text: 'Code organized in Shiny Modules, separated into page modules, visual components and modeling utilities.' },
+    { code: 'E/03', text: 'Reactive pipeline: modeling only runs when the user asks for it, and results are cached to feed every chart.' },
+  ]} />
+</Section>
+
+<Section address="0x03" title="Next steps">
+  <Learned items={[
+    { code: 'N/01', text: 'Apply the tool to operational data from Brazilian wind farms.' },
+    { code: 'N/02', text: 'Extend the data layer to other reanalysis datasets beyond MERRA-2.' },
+    { code: 'N/03', text: 'Add automated tests to support code maintenance.' },
+  ]} />
+</Section>

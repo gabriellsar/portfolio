@@ -108,3 +108,91 @@ export const trajetoria: Etapa[] = [
 ];
 
 export const trajetoriaAberta = 'mjv';
+
+export const trajetoriaEn: Etapa[] = [
+  {
+    id: 'mjv',
+    code: 'T/01',
+    org: 'MJV Technology & Innovation',
+    role: 'Innovation Intern',
+    area_in: 'Insurance',
+    area_out: 'Industry',
+    periodo: 'Jan 2026 – present',
+    resumo: 'Innovation consulting: structuring business process models from operational data.',
+    feitos: [
+      'Mapping workflows and analyzing operational data to find bottlenecks',
+      'Defining efficiency metrics',
+      'Documenting processes and running quantitative analyses to support decisions across teams and stakeholders',
+    ],
+    tags: ['consulting', 'data analysis', 'processes'],
+  },
+  {
+    id: 'frog',
+    code: 'T/02',
+    org: 'FROG · PUC-Rio',
+    role: 'Undergraduate Researcher',
+    area_in: 'Renewable Energy',
+    area_out: 'Research',
+    periodo: 'Mar 2025 – Mar 2026',
+    resumo: "Undergraduate research in the Industrial Engineering Department. I built WindAnalyzer, a decision-support tool that replaces the manufacturer's power curve with a probabilistic projection learned from the wind farm's own data.",
+    feitos: [
+      'Time-series pipeline: MERRA-2 reanalysis cross-referenced with INMET weather stations, filtering of inconsistent readings and bias correction',
+      'Non-parametric modeling with K-means, KDE and Monte Carlo, with 90% confidence bands',
+      'Software registered with INPI, the Brazilian IP office (BR512026006513-5)',
+      "Undergraduate research technical paper on the tool's architecture and methodology (DEI/PUC-Rio)",
+    ],
+    tags: ['R · Shiny', 'statistics', 'time series'],
+    projeto: { label: 'P/03 · WindAnalyzer', href: '/en/projects/windanalyzer' },
+  },
+  {
+    id: 'inst',
+    code: 'T/03',
+    org: 'Instrumento.io',
+    role: 'Systems Analyst',
+    area_in: 'Education',
+    area_out: 'Industry',
+    periodo: 'Oct 2024 – Sep 2025',
+    resumo: "Maintaining and evolving the startup's platform, built on Bubble (low-code), across the whole development cycle.",
+    feitos: [
+      'Building features and fixing bugs',
+      'Testing and signing off on releases',
+      'Integrating with external services and databases',
+    ],
+    tags: ['startup', 'bubble', 'low-code'],
+  },
+  {
+    id: 'mon',
+    code: 'T/04',
+    org: 'PUC-Rio',
+    role: 'Teaching Assistant',
+    area_in: 'Education',
+    area_out: 'Teaching',
+    periodo: 'Mar 2023 – Dec 2024',
+    resumo: 'Two teaching assistantships during my degree, one in data and one in engineering project management.',
+    subs: [
+      {
+        id: 'mon-icd',
+        role: 'Introduction to Data Science',
+        periodo: 'Aug 2024 – Dec 2024',
+        feitos: [
+          'Supporting students with data collection, cleaning and preprocessing',
+          'Implementing supervised and unsupervised models',
+          'Evaluating models with Python (pandas, scikit-learn)',
+        ],
+        tags: ['data science', 'pandas', 'scikit-learn'],
+      },
+      {
+        id: 'mon-pi',
+        role: 'Integrated Project',
+        periodo: 'Mar 2023 – Aug 2024',
+        feitos: [
+          'Hands-on course on methods and tools for engineering projects',
+          'Helping teams apply agile practices, with a focus on Scrum',
+        ],
+        tags: ['scrum', 'agile', 'project management'],
+      },
+    ],
+  },
+];
+
+export const trajetoriaFor = (lang: 'pt' | 'en') => (lang === 'en' ? trajetoriaEn : trajetoria);

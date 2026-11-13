@@ -1,23 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import Shell from './Shell';
 import type { ProjectLite } from '@/lib/projects';
-import { site } from '@/data/site';
+import { siteText } from '@/data/site';
+import { homeHash, t as tr, type Lang } from '@/i18n';
 
 type Theme = 'dark' | 'light';
 
-const TABS = [
-  { id: 'topo', label: '0:home' },
-  { id: 'projetos', label: '1:projetos' },
-  { id: 'trajetoria', label: '2:trajetória' },
-  { id: 'contato', label: '3:contato' },
-];
+const TABS = ['topo', 'projetos', 'trajetoria', 'contato'] as const;
 
 function readTheme(): Theme {
   if (typeof document === 'undefined') return 'dark';
   return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
 }
 
-export default function TmuxBar({ isHome, active: activeProp = 'topo', projects, status, email }: {
+export default function TmuxBar({ lang = 'pt', langHref, isHome, active: activeProp = 'topo', projects, status, email }: {
+  lang?: Lang;
+  langHref: Record<Lang, string>;
   isHome: boolean;
   active?: string;
   projects: ProjectLite[];
@@ -27,6 +25,8 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
   const [theme, setThemeState] = useState<Theme>('dark');
   const [active, setActive] = useState(activeProp);
   const [sh, setSh] = useState(false);
+  const L = tr(lang);
+  const other: Lang = lang === 'pt' ? 'en' : 'pt';
 
   useEffect(() => { setThemeState(readTheme()); }, []);
 
@@ -70,14 +70,14 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
   }, [sh]);
 
   return (
-    <nav className="tmux" aria-label="Principal">
+    <nav className="tmux" aria-label={L.navLabel}>
       <div className="tmux-left">
-        <a href={isHome ? '#topo' : '/'} className="tmux-brand">{sh ? 'CMD' : 'gabriellsar'}</a>
-        {TABS.map((t) => {
-          const on = t.id === active;
+        <a href={isHome ? '#topo' : homeHash(lang, 'topo')} className="tmux-brand">{sh ? 'CMD' : 'gabriellsar'}</a>
+        {TABS.map((id) => {
+          const on = id === active;
           return (
-            <a key={t.id} href={isHome ? `#${t.id}` : t.id === 'topo' ? '/' : `/#${t.id}`} className="tmux-tab" aria-current={on ? 'location' : undefined}>
-              {t.label}{on ? '*' : ''}
+            <a key={id} href={isHome ? `#${id}` : homeHash(lang, id)} className="tmux-tab" aria-current={on ? 'location' : undefined}>
+              {L.tabs[id]}{on ? '*' : ''}
             </a>
           );
         })}
@@ -91,14 +91,19 @@ export default function TmuxBar({ isHome, active: activeProp = 'topo', projects,
             </span>
           ))}
         </div>
-        <a href={site.cv} download className="tmux-tab tmux-cv" aria-label="Baixar currículo (PDF)">
+        <a href={langHref[other]} hrefLang={other === 'en' ? 'en' : 'pt-BR'} lang={other === 'en' ? 'en' : 'pt-BR'} className="tmux-tab tmux-lang lang-switch" data-lang-switch aria-label={L.langSwitch}>
+          <span className={`lang-opt${lang === 'pt' ? ' is-on' : ''}`} aria-hidden="true">PT</span>
+          <span className="lang-sep" aria-hidden="true">/</span>
+          <span className={`lang-opt${lang === 'en' ? ' is-on' : ''}`} aria-hidden="true">EN</span>
+        </a>
+        <a href={siteText[lang].cv} download className="tmux-tab tmux-cv" aria-label={L.cvAria}>
           <svg className="icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M2.5 13.5h11" />
           </svg>
-          <span className="label">Currículo</span>
+          <span className="label">{L.cv}</span>
         </a>
       </div>
-      <Shell open={sh} onClose={() => setSh(false)} projects={projects} isHome={isHome} email={email} theme={theme} onTheme={setTheme} />
+      <Shell lang={lang} langHref={langHref} open={sh} onClose={() => setSh(false)} projects={projects} isHome={isHome} email={email} theme={theme} onTheme={setTheme} />
     </nav>
   );
 }

@@ -1,3 +1,5 @@
+import type { Lang } from '@/i18n';
+
 export const site = {
   name: 'gabriellsar',
   author: 'Gabriel',
@@ -12,6 +14,18 @@ export const site = {
   linkedinLabel: 'linkedin.com/in/gabriellsar',
   cv: '/cv.pdf',
   boot: false,
+};
+
+/** Textos do `site` que mudam com o idioma. */
+export const siteText: Record<Lang, { description: string; location: string; cv: string }> = {
+  pt: { description: site.description, location: site.location, cv: site.cv },
+  en: {
+    description:
+      'Computer Engineering student at PUC-Rio. I research and build applied machine learning solutions and take models from the notebook to production.',
+    location: 'RIO DE JANEIRO, BRAZIL',
+    // Trocar para '/cv-en.pdf' quando houver currículo em inglês em public/
+    cv: site.cv,
+  },
 };
 
 export const mailto = site.email.startsWith('[') ? '#contato' : `mailto:${site.email}`;
